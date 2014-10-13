@@ -1,0 +1,29 @@
+
+rpigo_log_timestamp() {
+    if [ -z "$RPIGO_DEVELOPER" ]; then
+        date +"%Y-%m-%dT%H:%M%z" 
+    else
+        date +"T%H:%M" 
+    fi
+}
+
+
+rpigo_debug() {
+    echo "$(basename $0)/d($(rpigo_log_timestamp)):" $*
+}
+
+
+rpigo_info() {
+    echo "$(basename $0)/i($(rpigo_log_timestamp)):" $*
+}
+
+
+rpigo_warn() {
+    echo "$(basename $0)/w($(rpigo_log_timestamp)):" $*
+}
+
+
+rpigo_error() {
+    echo "$(basename $0)/e($(rpigo_log_timestamp)):" $*
+}
+

@@ -1,0 +1,69 @@
+#!/bin/sh
+#-
+# Copyright (c) 2014-current, Terry Mathew Poulin <BigBoss1964@gmail.com>
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# queue.lib -- a simple message queue for shell.
+#
+
+#
+# Setup the queue and export RPIGO_QUEUE for subprocesses to use.
+# Only call this from the startup program.
+# This is a noop if RPIGO_QUEUE is already set.
+#
+rpigo_queue_setup() {
+    local fn
+
+    fn='rpigo_queue_setup()'
+
+    if [ -n "$RPIGO_QUEUE" ]; then
+        rpigo_warn "$fn: RPIGO_QUEUE already setup. Skipping."
+        return
+    fi
+
+    if [ -z "$1" ]; then
+        rpigo_debug "$fn: Using mktemp."
+        RPIGO_QUEUE="$(mktemp -u -d rpigo-queue.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)"
+    else
+        rpigo_debug "$fn: Using \$1=$1."
+        RPIGO_QUEUE="$1"
+        mkdir -p "$RPIGO_QUEUE"
+    fi
+    if [ $? -ne 0 ]; then
+        rpigo_error "$fn: Failed making queue."
+        return 73 # EX_CANTCREAT
+    fi
+    export RPIGO_QUEUE
+}
+
+
+#
+#
+#
+rpigo_queue_wait() {
+    if [ -z "$RPIGO_QUEUE" ]; then
+        rpigo_error 'rpigo_queue_wait(): no RPIGO_QUEUE to wait on. Did you call setup?'
+        return 69 # EX_UNAVAILABLE service unavailable.
+    fi
+
+    if type inotifywait >/dev/null; then
+        inotifywait -m -q -e create --format "%w%f" "$RPIGO_QUEUE"
+    else
+        echo "INOTIFYWAIT NOT INSTALLED."
+        echo 'Install inotify-tools or port me to your OS!'
+        exit 72 # EX_OSFILE, critical OS file missing.
+    fi
+}
+
+
