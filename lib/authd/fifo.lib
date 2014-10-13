@@ -1,0 +1,23 @@
+#
+# FIFO based backend for authd.
+#
+
+RPIGO_AUTHD_FIFO="${RPIGO_QUEUE}/$$.fifo"
+
+fifo_command_setup() {
+    rpigo_queue_setup
+    mkfifo "$RPIGO_AUTHD_FIFO"
+}
+
+fifo_command_teardown() {
+    rm -f "$RPIGO_AUTHD_FIFO"
+}
+
+fifo_command_parser() {
+    rpigo_debug "fifo_command_parser called with fifo $RPIGO_AUTHD_FIFO"
+
+    # We will block until there is something to written to the fifo.
+    #
+    eval "$1='$(cat $RPIGO_AUTHD_FIFO)'"
+}
+

@@ -29,17 +29,16 @@ daemonize() {
     setsid $* 
 }
 
-RPIGO_DEVELOPER="$(dirname $0)/.."
-RPIGO_LIBDIR="${RPIGO_DEVELOPER}/lib"
-RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir /tmp/rpigo.queue
-
-export RPIGO_DEVELOPER RPIGO_LIBDIR RPIGO_QUEUE
+export RPIGO_DEVELOPER="$(dirname $0)/.."
+export RPIGO_LIBDIR="${RPIGO_DEVELOPER}/lib"
+export RPIGO_SHAREDIR="${RPIGO_DEVELOPER}/share"
+export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir /tmp/rpigo.queue
 
 .  "${RPIGO_LIBDIR}/log.lib"
 
 rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 
-daemonize "${RPIGO_DEVELOPER}/src/rpigo-authd.sh"
+daemonize "${RPIGO_DEVELOPER}/src/rpigo-authd.sh" -o fifo
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-powerd.sh"
 
 #"${RPIGO_DEVELOPER}/init/rpigo-authd" start
