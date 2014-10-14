@@ -97,12 +97,15 @@ do
     #
     for list in ${RPIGO_SHAREDIR}/*.cmds
     do
-        rpigo_debug "list=$list"
+        rpigo_debug "command pattern list=$list"
 
-        if grep -q "$COMMAND" $list; then
-            to_daemon="$(basename $list | cut -d. -f 1)"
-            break
-        fi
+        while read basic_pattern
+        do
+            if echo "$COMMAND" | grep -q "$basic_pattern"; then
+                to_daemon="$(basename $list | cut -d. -f 1)"
+                break
+            fi
+        done < "$list"
     done
 
     if [ -z "$to_daemon" ]; then
