@@ -37,7 +37,6 @@ do
 
     case "$message_file" in
         */powerd.*)
-            echo "WTF WTF WTF"
             case "$command" in
                 ${NAME}\ STOP)
                     rpigo_info "stopping process."
