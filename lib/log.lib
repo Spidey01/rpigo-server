@@ -9,21 +9,21 @@ rpigo_log_timestamp() {
 
 
 rpigo_debug() {
-    echo "$(basename $0)/d($(rpigo_log_timestamp)):" $*
+    echo "$(basename $0)/d(pid=$$, $(rpigo_log_timestamp)):" $*
 }
 
 
 rpigo_info() {
-    echo "$(basename $0)/i($(rpigo_log_timestamp)):" $*
+    echo "$(basename $0)/i(pid=$$, $(rpigo_log_timestamp)):" $*
 }
 
 
 rpigo_warn() {
-    echo "$(basename $0)/w($(rpigo_log_timestamp)):" $*
+    echo "$(basename $0)/w(pid=$$, $(rpigo_log_timestamp)):" $*
 }
 
 
 rpigo_error() {
-    echo "$(basename $0)/e($(rpigo_log_timestamp)):" $*
+    echo "$(basename $0)/e(pid=$$, $(rpigo_log_timestamp)):" $*
 }
 
