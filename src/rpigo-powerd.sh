@@ -44,6 +44,12 @@ do
                     # d'oh how do we kill rpigo_queue_wait?
                     exit 0
                     ;;
+                SHUTDOWN)
+                    sudo shutdown -hP now
+                    ;;
+                REBOOT)
+                    sudo reboot
+                    ;;
                 *)
                     echo "handle command: $command ..."
                     ;;
