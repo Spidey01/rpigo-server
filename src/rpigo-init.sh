@@ -40,6 +40,7 @@ rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-authd.sh" -o fifo
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-powerd.sh"
+daemonize "${RPIGO_DEVELOPER}/src/rpigo-serviced.sh"
 
 #"${RPIGO_DEVELOPER}/init/rpigo-authd" start
 
