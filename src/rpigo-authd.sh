@@ -109,7 +109,7 @@ do
         rpigo_warn "unknown command: '$COMMAND'"
         continue # MAGIC!
     fi
-    echo "We want to send $COMMAND to $list"
+    echo "We want to send '$COMMAND' to '$to_daemon'"
 
     # magic: handle our own commands.
     if [ "$to_daemon" = "authd" ]; then
@@ -123,15 +123,19 @@ do
     #
 
     # by modification time
-    last_message_number=$(ls -t "${RPIGO_QUEUE}/${to_daemon}.[0-9]*" | tail -n 1 | cut -d. -f 1)
+    #last_message_number=$(ls -t ${RPIGO_QUEUE}/${to_daemon}.[0-9]* | tail -n 1 | xargs basename | cut -d. -f 2 2>/dev/null)
     # by name
-    last_message_number=$(ls "${RPIGO_QUEUE}/${to_daemon}.[0-9]*" | sort | tail -n 1 | cut -d. -f 1)
+    last_message_number=$(ls ${RPIGO_QUEUE}/${to_daemon}.[0-9]* | sort | tail -n 1 | xargs basename | cut -d. -f 2 2>/dev/null)
 
     [ -z $last_message_number ] && last_message_number=-1
+
     message_file="${RPIGO_QUEUE}/${to_daemon}.$(expr $last_message_number + 1)"
     
     rpigo_debug "message_file will be: $message_file"
+    rpigo_debug "COMMAND will be: $COMMAND"
+
     echo "$COMMAND" > $message_file
+    #rpigo_debug "rm -f => $message_file"
 done
 
 $command_teardown
