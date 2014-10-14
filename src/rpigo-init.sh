@@ -26,7 +26,7 @@
 daemonize() {
     #echo "setsid $* >/dev/null 2>&1 < /dev/null &"
     #setsid $* >>rpigo.log 2>&1 < /dev/null &
-    setsid $* 
+    setsid $* < /dev/null &
 }
 
 export RPIGO_DEVELOPER="$(dirname $0)/.."
