@@ -58,7 +58,7 @@ rpigo_queue_wait() {
     fi
 
     if type inotifywait >/dev/null; then
-        inotifywait -m -q -e create --format "%w%f" "$RPIGO_QUEUE"
+        inotifywait --exclude '.fifo$' -m -q -e create --format "%w%f" "$RPIGO_QUEUE"
     else
         echo "INOTIFYWAIT NOT INSTALLED."
         echo 'Install inotify-tools or port me to your OS!'
