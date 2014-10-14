@@ -44,3 +44,5 @@ daemonize "${RPIGO_DEVELOPER}/src/rpigo-serviced.sh"
 
 #"${RPIGO_DEVELOPER}/init/rpigo-authd" start
 
+echo "processes:"
+pstree $$
