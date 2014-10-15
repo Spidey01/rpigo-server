@@ -79,14 +79,16 @@ mount_device() {
         [ -n "$storage_mount_uid" ]     && volume_options="${volume_options},uid=$storage_mount_uid"
         [ -n "$storage_mount_gid" ]     && volume_options="${volume_options},gid=$storage_mount_gid"
         [ -n "$volume_options" ]        && volume_options="-o defaults${volume_options}"
-        [ -n "$storage_mount_options" ] && volume_options="${volume_options} ${storage_mount_options}"
 
         #
         # Get it done ;).
         #
         mount_point="${storage_root}/${volume_name}"
         sudo mkdir -m 0007 -p "$mount_point"
-        sudo mount -t "$volume_format" "$volume_options" "$new_device" "$mount_point"
+        if ! sudo mount -t "$volume_format" $volume_options $storage_mount_options "$new_device" "$mount_point"
+        then
+            rpigo_error "Looks like mounting '$new_device' on '$mount_point' failed."
+        fi
     fi
 }
 
