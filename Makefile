@@ -29,6 +29,11 @@ NAME = rpigo
 SHAREDIR = $(DESTDIR)$(PREFIX)/share/$(NAME)
 LIBDIR = $(DESTDIR)$(PREFIX)/lib/$(NAME)
 BINDIR = $(DESTDIR)$(PREFIX)/bin
+#
+# XXX
+# How to handle this? Some systems have /usr/local/etc; most do not.
+# Probably should use $(DESTDIR)/etc/xdg/$(NAME) for this.
+#
 CONFIGDIR = $(DESTDIR)$(PREFIX)/etc/xdg/$(NAME)
 DOCDIR = $(DESTDIR)$(PREFIX)/share/doc/$(NAME)
 
@@ -57,22 +62,23 @@ all:
 	echo blarg.
 
 install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES)
-	@echo install to $(DESTDIR)$(PREFIX)
+	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
 
 .PHONY: install
 
 $(SHAREDIR):
-	@echo mkdir "$@"
+	mkdir "$@"
 
 $(LIBDIR):
-	@echo mkdir "$@"
+	mkdir "$@"
+	mkdir "$@"/authd
 
 $(CONFIGDIR):
-	@echo mkdir "$@"
-	@echo mkdir "$@"/packags.d
+	mkdir "$@"
+	mkdir "$@"/packages.d
 
 $(DOCDIR):
-	@echo mkdir "$@"
+	mkdir "$@"
 
 #
 # Pattern rules.
@@ -82,33 +88,33 @@ $(DOCDIR):
 # Install .cmds files from share.
 #
 $(SHAREDIR)/%.cmds: share/%.cmds
-	@echo install $< "$@"
+	install $< "$@"
 
 #
 # Install .lib files from lib.
 #
 $(LIBDIR)/%.lib: lib/%.lib
-	@echo install $< "$@"
+	install $< "$@"
 $(LIBDIR)/authd/%.lib: lib/authd/%.lib
-	@echo install $< "$@"
+	install $< "$@"
 
 #
 # Install .sh files from src.
 #
 $(BINDIR)/%: src/%.sh
-	@echo install $< "$@"
+	install $< "$@"
 
 #
 # Install .conf and related files from config.
 #
 $(CONFIGDIR)/%.conf: config/%.conf
-	@echo install $< "$@"
+	install $< "$@"
 $(CONFIGDIR)/packages.d/%.list: config/packages.d/%.list
-	@echo install $< "$@"
+	install $< "$@"
 
 #
 # Install our Markdown files.
 #
 $(DOCDIR)/%.md: %.md
-	@echo install $< "$@"
+	install $< "$@"
 
