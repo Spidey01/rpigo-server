@@ -36,7 +36,7 @@ is_allowed_device() {
 # Mount sepcified device IAW config.
 #
 mount_device() {
-    local fn new_device volume_name volume_format volume_options
+    local fn new_device volume_name volume_format volume_options mount_point
 
     fn="${FUNCNAME[0]}()"
     new_device="$1"
@@ -81,7 +81,12 @@ mount_device() {
         [ -n "$volume_options" ]        && volume_options="-o defaults${volume_options}"
         [ -n "$storage_mount_options" ] && volume_options="${volume_options} ${storage_mount_options}"
 
-        echo sudo mount -t "$volume_format" "$volume_options" "$new_device" "${storage_root}/${volume_name}"
+        #
+        # Get it done ;).
+        #
+        mount_point="${storage_root}/${volume_name}"
+        sudo mkdir -m 0007 -p "$mount_point"
+        sudo mount -t "$volume_format" "$volume_options" "$new_device" "$mount_point"
     fi
 }
 
