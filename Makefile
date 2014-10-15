@@ -58,8 +58,19 @@ CONFIG_FILES = $(addprefix $(CONFIGDIR)/,$(notdir $(shell find config -maxdepth 
 
 DOC_FILES = $(DOCDIR)/README.md $(DOCDIR)/HACKING.md
 
-all:
-	echo blarg.
+help:
+	@echo "Available targets and variables are as follows:"
+	@echo ""
+	@printf "\t* help:\n"
+	@printf "\t* install: Install to $(DESTDIR)$(PREFIX)\n"
+	@printf "\t* uninstall: uninstall files but leave $(CONFIGDIR)\n"
+	@printf "\t* purge: uninstall + purge $(CONFIGDIR)\n"
+	@echo ""
+	@echo "You can change install location by setting PREFIX=yourpath."
+	@echo 'I.e.$$ make PREFIX=/usr install'
+	@echo ""
+	@echo "DESTDIR will be respected as expected if given."
+	@echo ""
 
 install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES)
 	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
