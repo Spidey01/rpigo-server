@@ -23,35 +23,43 @@ fi
 
 
 . "${RPIGO_LIBDIR}/log.lib"
-#. "${RPIGO_LIBDIR}/queue.lib"
+. "${RPIGO_LIBDIR}/queue.lib"
 
 
 my_exit_trap() {
-    [ -n "$MONITOR_PID" ] && pkill -P $MONITOR_PID inotifywait
+    echo "it's a trap!"
+    #[ -n "$MONITOR_PID" ] && pkill -P $MONITOR_PID inotifywait
+    [ -n "$MONITOR_PID" ] && kill -- -$MONITOR_PID
 }
 
 trap 'my_exit_trap' EXIT
 
 storage_root="${storage_root:-/media}"
 
-while read new_device
-do
-    # kill our inotifywait via our EXIT trap.
-    # Obviously it only works if we've gotten output from inotifywait before exiting.
-    #
-    [ -z "$MONITOR_PID" ] && MONITOR_PID=$!
+is_allowed_device() {
+    echo "$1" | grep -q -E '/dev/sd[a-z]+[0-9]+$'
+}
 
-    rpigo_debug "new_device=$new_device"
+#
+# Mount sepcified device IAW config.
+#
+mount_device() {
+    local fn new_device volume_name volume_format volume_options
 
-    if echo "$new_device" | grep -q -E '/dev/sd[a-z]+[0-9]+$'; then
-        rpigo_info "attempt mounting $new_device"
+    fn="${FUNCNAME[0]}()"
+    new_device="$1"
+
+    rpigo_debug "$fn: new_device=$new_device"
+
+    if is_allowed_device "$new_device"; then
+        rpigo_info "$fn: attempt mounting $new_device"
         #
         # determine the volume name to use as a mount point.
         #
         if [ -n "$storage_name_format" \
              -a \( "$storage_name_format" != "UUID" -a "$storage_name_format" != "LABEL" \) ]
          then
-            rpigo_error "unsupported storage_name_format=${storage_name_format}."
+            rpigo_error "$fn: unsupported storage_name_format=${storage_name_format}."
             continue
         fi
         volume_name="$(sudo blkid -o export "$new_device" | grep "$storage_name_format" | cut -d '=' -f 2)"
@@ -63,7 +71,7 @@ do
         # I'm just going to trust blkid to tell us the format. And warn if mkfs.that doesn't exist.
         #
         volume_format="$(blkid blkid -o export "$new_device" | grep "TYPE" | cut -d '=' -f 2)"
-        type mkfs."${volume_format}" >/dev/null 2>/dev/null || rpigo_warn "mkfs.$volume_format doesn't exist."
+        type mkfs."${volume_format}" >/dev/null 2>/dev/null || rpigo_warn "$fn: mkfs.$volume_format doesn't exist."
 
         #
         # Handle mount options.
@@ -77,29 +85,44 @@ do
 
         echo sudo mount -t "$volume_format" "$volume_options" "$new_device" "${storage_root}/${volume_name}"
     fi
-done < <(inotifywait -m -q -e create --format "%w%f" /dev)
+}
 
+rpigo_debug "my pid: $$ and my ppid: $PPID"
+while read device_or_message
+do
+    rpigo_debug "device_or_message=$device_or_message"
 
-# while read message_file
-# do
-#     rpigo_debug "message_file=$message_file"
-# 
-#     command="$(cat $message_file)"
-#     rpigo_debug "command was $command"
-# 
-#     case "$message_file" in
-#         */storaged.*)
-#             case "$command" in
-#                 ${NAME}\ STOP)
-#                     rpigo_info "stopping process."
-#                     ;;
-#                 *)
-#                     echo "handle command: $command ..."
-#                     ;;
-#             esac
-#             ;;
-#         *)
-#             rpigo_debug "ignoring $message_file"
-#             ;;
-#     esac
-# done < <(rpigo_queue_wait)
+    # kill our inotifywait via our EXIT trap.
+    # Obviously it only works if we've gotten output from inotifywait before exiting.
+    #
+    [ -z "$MONITOR_PID" ] && MONITOR_PID=$!
+
+    if is_allowed_device "$new_device"; then
+        mount_device "$new_device"
+    else
+        #
+        # It's a message file in the queue.
+        #
+        command="$(cat $device_or_message)"
+        rpigo_debug "command was $command"
+
+        case "$device_or_message" in
+            */storaged.*)
+                case "$command" in
+                    ${NAME}\ STOP)
+                        rpigo_info "stopping process."
+                        exit 0
+                        ;;
+                    *)
+                        rpigo_warn "TODO: handle command: $command ..."
+                        ;;
+                esac
+                ;;
+            *)
+                rpigo_debug "ignoring $device_or_message"
+                ;;
+        esac
+    fi
+
+done < <(rpigo_queue_wait & inotifywait -m -q -e create --format "%w%f" /dev & wait)
+
