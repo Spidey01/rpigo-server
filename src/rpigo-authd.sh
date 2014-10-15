@@ -101,6 +101,8 @@ do
 
         while read basic_pattern
         do
+            grep -qE '^#' && continue
+
             if echo "$COMMAND" | grep -q "$basic_pattern"; then
                 to_daemon="$(basename $list | cut -d. -f 1)"
                 break

@@ -1,0 +1,7 @@
+rpigo-packaged STOP
+PACKAGESET INSTALL *
+PACKAGESET REMOVE *
+#
+# Not handled yet
+#
+PACKAGESET UPDATE *

@@ -1,0 +1,42 @@
+#
+# apt.lib -- helper functions for apt-get and company.
+#
+
+apt_get_packages() {
+    local fn line
+
+    #rpigo_debug "file: $1"
+
+    fn="${FUNCNAME[0]}()"
+
+    while read line
+    do
+        #rpigo_debug "$fn: line=$line"
+        [ -z "$line" ] && continue
+        echo $line | grep -q '#' && continue
+
+        echo "$line"
+    done < "$1"
+}
+
+
+apt_install() {
+    echo sudo apt-get install --dry-run -y "$1"
+}
+
+
+apt_remove() {
+    echo sudo apt-get remove --dry-run -y "$1"
+    # or do we want to 'purge' or 'remove' then 'autoremove' ?
+}
+
+
+apt_update() {
+    sudo apt-get update
+}
+
+
+apt_upgrade() {
+    echo sudo apt-get upgrade --dry-run -y "$1"
+}
+

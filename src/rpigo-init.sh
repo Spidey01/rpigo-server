@@ -39,13 +39,10 @@ export RPIGO_CONFIGDIR="${RPIGO_DEVELOPER}/config"
 rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-authd.sh" -o fifo
-#daemonize "${RPIGO_DEVELOPER}/src/rpigo-packaged.sh"
-#"${RPIGO_DEVELOPER}/src/rpigo-packaged.sh"
-
-daemonize "${RPIGO_DEVELOPER}/src/rpigo-storaged.sh"
-
+daemonize "${RPIGO_DEVELOPER}/src/rpigo-packaged.sh"
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-powerd.sh"
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-serviced.sh"
+daemonize "${RPIGO_DEVELOPER}/src/rpigo-storaged.sh"
 
 rpigo_info "waiting on childrens."
 wait

@@ -1,0 +1,33 @@
+#
+# config.lib -- library for handling .conf files and such.
+#
+
+#
+# Parse config and evaluate as environment variables.
+#
+config_eval() {
+    local fn line var_name var_value
+
+    fn='eval_config()'
+
+    while read line
+    do
+        rpigo_debug "$fn: line='$line'"
+        echo $line | grep -q '#' && continue
+
+        var_name="$(echo $line | sed -e 's/\s*=\s*/\n/g' | head -n 1)"
+        var_value="$(echo $line | sed -e 's/\s*=\s*/\n/g' | tail -n 1)"
+
+        rpigo_debug "eval planned: '${var_name}=${var_value}'"
+        eval "${var_name}=${var_value}"
+
+    done < "$MY_CONFIG"
+}
+
+#
+# Grep config and print the key and value on seperate lines.
+#
+config_grep() {
+    grep "$@" | grep -v '#'
+}
+
