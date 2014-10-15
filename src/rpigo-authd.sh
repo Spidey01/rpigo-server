@@ -82,10 +82,6 @@ rpigo_debug "command_parser function is $command_parser"
 
 $command_setup
 
-    echo "ls ${RPIGO_SHAREDIR}"
-    ls -l "${RPIGO_SHAREDIR}"
-    echo '---'
-
 while $command_parser COMMAND
 do
     rpigo_debug "COMMAND='$COMMAND'"
