@@ -76,6 +76,8 @@ mount_device() {
         [ -n "$storage_mount_noexec" ]  && volume_options="${volume_options},noexec"
         [ -n "$storage_mount_nodev" ]   && volume_options="${volume_options},nodev"
         [ -n "$storage_mount_nosuid" ]  && volume_options="${volume_options},nosuid"
+        [ -n "$storage_mount_uid" ]     && volume_options="${volume_options},uid=$storage_mount_uid"
+        [ -n "$storage_mount_gid" ]     && volume_options="${volume_options},gid=$storage_mount_gid"
         [ -n "$volume_options" ]        && volume_options="-o defaults${volume_options}"
         [ -n "$storage_mount_options" ] && volume_options="${volume_options} ${storage_mount_options}"
 
