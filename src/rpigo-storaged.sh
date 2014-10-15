@@ -45,6 +45,10 @@ mount_device() {
 
     if is_allowed_device "$new_device"; then
         rpigo_info "$fn: attempt mounting $new_device"
+
+        # Force a default if not set.
+        [ -z "$storage_name_format" ] && storage_name_format="LABEL"
+
         #
         # determine the volume name to use as a mount point.
         #
@@ -57,7 +61,7 @@ mount_device() {
         volume_name="$(sudo blkid -o export "$new_device" | grep "$storage_name_format" | cut -d '=' -f 2)"
 
         # fail safe in case storage_name_format=LABEL and there is no label.
-        [ -z "$storage_name_format" ] && storage_name_format="$(basename "$new_device")"
+        [ -z "$volume_name" ] && volume_name="$(basename "$new_device")"
 
         #
         # I'm just going to trust blkid to tell us the format. And warn if mkfs.that doesn't exist.
