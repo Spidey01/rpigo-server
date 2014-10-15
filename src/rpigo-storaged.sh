@@ -83,8 +83,8 @@ while read device_or_message
 do
     rpigo_debug "device_or_message=$device_or_message"
 
-    if is_allowed_device "$new_device"; then
-        mount_device "$new_device"
+    if grep -q /dev/ <<< "$device_or_message"; then
+        mount_device "$device_or_message"
     else
         #
         # It's a message file in the queue.
