@@ -64,7 +64,16 @@ all:
 install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES)
 	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
 
-.PHONY: install
+uninstall:
+	rm -rf $(DOCDIR)
+	rm -rf $(SHAREDIR)
+	rm -rf $(LIBDIR)
+	rm -f $(SRC_FILES)
+
+purge: uninstall
+	rm -rf $(CONFIGDIR)
+
+.PHONY: install uninstall purge
 
 $(SHAREDIR):
 	mkdir "$@"
