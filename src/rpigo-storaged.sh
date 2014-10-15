@@ -26,14 +26,6 @@ fi
 . "${RPIGO_LIBDIR}/queue.lib"
 
 
-my_exit_trap() {
-    echo "it's a trap!"
-    #[ -n "$MONITOR_PID" ] && pkill -P $MONITOR_PID inotifywait
-    [ -n "$MONITOR_PID" ] && kill -- -$MONITOR_PID
-}
-
-trap 'my_exit_trap' EXIT
-
 storage_root="${storage_root:-/media}"
 
 is_allowed_device() {
@@ -87,15 +79,9 @@ mount_device() {
     fi
 }
 
-rpigo_debug "my pid: $$ and my ppid: $PPID"
 while read device_or_message
 do
     rpigo_debug "device_or_message=$device_or_message"
-
-    # kill our inotifywait via our EXIT trap.
-    # Obviously it only works if we've gotten output from inotifywait before exiting.
-    #
-    [ -z "$MONITOR_PID" ] && MONITOR_PID=$!
 
     if is_allowed_device "$new_device"; then
         mount_device "$new_device"
@@ -103,7 +89,7 @@ do
         #
         # It's a message file in the queue.
         #
-        command="$(cat $device_or_message)"
+        command="$(cat $device_or_message 2>/dev/null)"
         rpigo_debug "command was $command"
 
         case "$device_or_message" in
@@ -111,13 +97,18 @@ do
                 case "$command" in
                     ${NAME}\ STOP)
                         rpigo_info "stopping process."
-                        exit 0
+                        # self kill with childrens.
+                        kill -- -$$
                         ;;
                     *)
                         rpigo_warn "TODO: handle command: $command ..."
                         ;;
                 esac
                 ;;
+            # See comments below loop.
+            #${NAME}_*_pid\ [0-9]*)
+            #    MONITOR_PIDS="$MONITOR_PIDS $(echo $device_or_message | awk '{print $2}')"
+            #    ;;
             *)
                 rpigo_debug "ignoring $device_or_message"
                 ;;
@@ -125,4 +116,13 @@ do
     fi
 
 done < <(rpigo_queue_wait & inotifywait -m -q -e create --format "%w%f" /dev & wait)
+#
+# wait so the subshell sticks around for the loop.
+#
+# We can't get the exact ppid of rpi_queue_wait& with $!; so we just kill ourself by -$$.
+#
+# We probably could wait on inotifywait's $! alone to deal with it via
+# MONITOR_PIDS and futher # forgoe the rpi_queue_wait->inotifywait cleanup
+# until such time as deciding on # one in general.
+#
 
