@@ -24,7 +24,6 @@
 # Execute program as a daemon.
 #
 daemonize() {
-    #echo "setsid $* >/dev/null 2>&1 < /dev/null &"
     #setsid $* >>rpigo.log 2>&1 < /dev/null &
     setsid $* < /dev/null &
 }
@@ -33,16 +32,20 @@ export RPIGO_DEVELOPER="$(dirname $0)/.."
 export RPIGO_LIBDIR="${RPIGO_DEVELOPER}/lib"
 export RPIGO_SHAREDIR="${RPIGO_DEVELOPER}/share"
 export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir /tmp/rpigo.queue
+export RPIGO_CONFIGDIR="${RPIGO_DEVELOPER}/config"
 
 .  "${RPIGO_LIBDIR}/log.lib"
 
 rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-authd.sh" -o fifo
+#daemonize "${RPIGO_DEVELOPER}/src/rpigo-packaged.sh"
+#"${RPIGO_DEVELOPER}/src/rpigo-packaged.sh"
+
+daemonize "${RPIGO_DEVELOPER}/src/rpigo-storaged.sh"
+
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-powerd.sh"
 daemonize "${RPIGO_DEVELOPER}/src/rpigo-serviced.sh"
 
-#"${RPIGO_DEVELOPER}/init/rpigo-authd" start
-
-echo "processes:"
-pstree $$
+rpigo_info "waiting on childrens."
+wait
