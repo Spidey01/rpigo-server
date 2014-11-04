@@ -54,10 +54,11 @@ shift `expr $OPTIND - 1`
 # Setup the backend and a command_paser= to a suitable callback..
 #
 
+# XXX needs more error checking!
 command_backend="${RPIGO_LIBDIR}/authd/${authd_backend}.lib"
-command_setup=
-command_teardown=
-command_parser=
+command_setup="${authd_backend}_command_setup"
+command_teardown="${authd_backend}_command_teardown"
+command_parser="${authd_backend}_command_parser"
 
 case "$authd_backend" in
     fifo)
