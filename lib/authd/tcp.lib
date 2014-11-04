@@ -1,0 +1,23 @@
+#
+# Netcat based backend for authd.
+#
+
+RPIGO_AUTHD_PORT=5999
+
+tcp_command_setup() {
+    rpigo_queue_setup
+}
+
+tcp_command_teardown() {
+    true
+}
+
+tcp_command_parser() {
+    rpigo_debug "tcp_command_parser called with port $RPIGO_AUTHD_PORT"
+
+    # We will block until the socket is opened, written, and closed.
+    #
+    eval "$1='$(nc -l $RPIGO_AUTHD_PORT)'"
+}
+
+

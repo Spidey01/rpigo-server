@@ -62,9 +62,8 @@ command_parser="${authd_backend}_command_parser"
 
 case "$authd_backend" in
     fifo)
-        command_setup=fifo_command_setup
-        command_teardown=fifo_command_teardown
-        command_parser=fifo_command_parser
+        ;;
+    tcp)
         ;;
     *)
         rpigo_error "unknown backend: ${authd_backend:-no default set}"
