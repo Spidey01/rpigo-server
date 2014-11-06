@@ -29,6 +29,7 @@ daemonize() {
 }
 
 export RPIGO_DEVELOPER="$(dirname $0)/.."
+export RPIGO_BINDIR="${RPIGO_DEVELOPER}/src"
 export RPIGO_LIBDIR="${RPIGO_DEVELOPER}/lib"
 export RPIGO_SHAREDIR="${RPIGO_DEVELOPER}/share"
 export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir /tmp/rpigo.queue
@@ -38,11 +39,18 @@ export RPIGO_CONFIGDIR="${RPIGO_DEVELOPER}/config"
 
 rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 
-daemonize "${RPIGO_DEVELOPER}/src/rpigo-authd.sh" -o fifo
-daemonize "${RPIGO_DEVELOPER}/src/rpigo-packaged.sh"
-daemonize "${RPIGO_DEVELOPER}/src/rpigo-powerd.sh"
-daemonize "${RPIGO_DEVELOPER}/src/rpigo-serviced.sh"
-daemonize "${RPIGO_DEVELOPER}/src/rpigo-storaged.sh"
+daemonize "${RPIGO_BINDIR}/rpigo-authd.sh" -o fifo
+
+# WIP
+#daemonize "${RPIGO_BINDIR}/rpigo-networkd.sh"
+
+daemonize "${RPIGO_BINDIR}/rpigo-packaged.sh"
+daemonize "${RPIGO_BINDIR}/rpigo-powerd.sh"
+daemonize "${RPIGO_BINDIR}/rpigo-serviced.sh"
+daemonize "${RPIGO_BINDIR}/rpigo-storaged.sh"
+
+# WIP
+#daemonize "${RPIGO_BINDIR}/rpigo-ftpd.sh"
 
 rpigo_info "waiting on childrens."
 wait
