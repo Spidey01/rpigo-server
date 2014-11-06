@@ -13,11 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo $0 actual script
-
 NAME=rpigo-powerd
 
-[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+[ -r /etc/default/rpigo ] && . /etc/default/rpigo
 if [ -z "$RPIGO_LIBDIR" ]; then
     echo "${NAME}/wtf: RPIGO_LIBDIR not set. Aborting."
     exit 127

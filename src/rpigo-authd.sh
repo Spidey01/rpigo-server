@@ -15,7 +15,7 @@
 
 NAME=rpigo-authd
 
-[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+[ -r /etc/default/rpigo ] && . /etc/default/rpigo
 if [ -z "$RPIGO_LIBDIR" ]; then
     echo "${NAME}/wtf: RPIGO_LIBDIR not set. Aborting."
     exit 127
@@ -102,6 +102,7 @@ do
 
             if echo "$COMMAND" | grep -q "$basic_pattern"; then
                 to_daemon="$(basename $list | cut -d. -f 1)"
+                rpigo_debug "matched $list / $to_daemon"
                 break
             fi
         done < "$list"
