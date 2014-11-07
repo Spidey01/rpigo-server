@@ -49,8 +49,9 @@ daemonize "${RPIGO_BINDIR}/rpigo-powerd.sh"
 daemonize "${RPIGO_BINDIR}/rpigo-serviced.sh"
 daemonize "${RPIGO_BINDIR}/rpigo-storaged.sh"
 
+daemonize "${RPIGO_BINDIR}/rpigo-ftpd.sh"
 # WIP
-#daemonize "${RPIGO_BINDIR}/rpigo-ftpd.sh"
+#daemonize "${RPIGO_BINDIR}/rpigo-printerd.sh"
 
 rpigo_info "waiting on childrens."
 wait
