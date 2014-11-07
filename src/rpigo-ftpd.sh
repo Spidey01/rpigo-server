@@ -25,28 +25,49 @@ fi
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 . "${RPIGO_LIBDIR}/config.lib"
+. "${RPIGO_LIBDIR}/util.lib"
 
 # TODO: make sure RPIGO_CONFIGDIR is set.
 
 MY_CONFIG="${RPIGO_CONFIGDIR}/ftp.conf"
 MY_PIDDIR=/var/run/rpigo
 vsftpd_pidfile="${MY_PIDDIR}/vsftpd.pid"
+avahi_pid=
 
 ftpd_start() {
+    local ftp_port
+
     [ ! -d "$MY_PIDDIR" ] && rpigo_debug "mkdir $MY_PIDDIR" && sudo mkdir "$MY_PIDDIR"
 
+    rpigo_info "Starting vsftpd."
     #
     # Note: this will --chdir / by default. So file paths have to be absolute
     #       paths or relative to /, not the CWD of this script.
     #
     sudo start-stop-daemon --start --make-pidfile --pidfile "${vsftpd_pidfile}" \
         --background --exec /usr/sbin/vsftpd -- "${MY_CONFIG}" -obackground=NO
+    if [ $? -eq 0 ]; then
+        rpigo_info "Publishing via DNS-SD."
+        ftp_port="$(grep -v '#' "$MY_CONFIG" | grep 'listen_port=[0-9]*')"
+        sudo avahi-publish-service "$(rpigo_unitname) FTP File Sharing" _ftp._tcp "${ftp_port:-21}" &
+        avahi_pid=$!
+    fi
 }
 
 ftpd_stop() {
+    rpigo_info "Stopping vsftpd."
     sudo start-stop-daemon --stop --pidfile "${vsftpd_pidfile}" --name vsftpd
     sudo rm -f "${vsftpd_pidfile}"
+
+    [ -n "$avahi_pid" ] \
+        && rpigo_info "Unpublishing via DNS-SD." \
+        && sudo kill "$avahi_pid"
 }
+
+#
+# Enable if 
+#
+[ "$enable_ftpd" = true ] && ftpd_start
 
 
 while read message_file
@@ -88,5 +109,4 @@ do
             ;;
     esac
 done < <(rpigo_queue_wait)
-
 

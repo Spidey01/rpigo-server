@@ -1,0 +1,48 @@
+#
+# util.lib -- duh!
+#
+
+# Prints the serial number for this device.
+#
+# This only works for the raspberry pi at the moment. Not PCs.
+#
+get_serial_number() {
+    grep Serial /proc/cpuinfo  | awk '{ print $3 }'
+}
+
+# Filter that strips leading zeros.
+#
+# Use -l for left strip (default) or -r right strip.
+#
+# TODO: make -lr an error or actually work.
+#
+strip_zeros() {
+    local opt pattern default_pattern
+
+    default_pattern='^0*'
+    pattern="$default_pattern"
+
+    while getopts "lr" opt; do
+        case $opt in
+            l)
+                pattern="$default_pattern"
+                ;;
+            r)
+                pattern='0*$'
+                ;;
+            \?)
+                echo "Invalid option: -$OPTARG" >&2
+                return $OPTERR
+                ;;
+        esac
+    done
+
+    sed -e "s/${pattern}//"
+}
+
+# Prints a name like 'rpiNNNNN'
+#
+rpigo_unitname() {
+    echo "rpi$(get_serial_number | strip_zeros)"
+}
+
