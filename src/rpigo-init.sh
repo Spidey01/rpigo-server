@@ -28,7 +28,7 @@ daemonize() {
     setsid $* < /dev/null &
 }
 
-export RPIGO_DEVELOPER="$(dirname $0)/.."
+export RPIGO_DEVELOPER="$(readlink -e $(dirname $0)/..)"
 export RPIGO_BINDIR="${RPIGO_DEVELOPER}/src"
 export RPIGO_LIBDIR="${RPIGO_DEVELOPER}/lib"
 export RPIGO_SHAREDIR="${RPIGO_DEVELOPER}/share"
