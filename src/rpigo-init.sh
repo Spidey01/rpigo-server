@@ -17,6 +17,77 @@
 # rpigo-init -- bootstrap the system from source or init scripts.
 #
 
+# Source system defaults.
+[ -r /etc/default/rpigo ] && . /etc/default/rpigo
+
+#
+# usage: rpigo-init.sh [options]
+#
+while getopts "d" opt; do
+    case $opt in
+        d)
+            # enable developer mode.
+            export RPIGO_DEVELOPER=true
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit $OPTERR
+            ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+
+if [ -z "$RPIGO_DEVELOPER" ]
+then # RELEASE / INSTALLED MODE.
+echo release mode
+    [ -z "$RPIGO_PREFIX" ] \
+        && RPIGO_PREFIX=/usr/local \
+        && echo "Defaulting RPIGO_PREFIX=$RPIGO_PREFIX"
+
+    export RPIGO_BINDIR="${RPIGO_PREFIX}/bin"
+    export RPIGO_LIBDIR="${RPIGO_PREFIX}/lib"
+    export RPIGO_SHAREDIR="${RPIGO_PREFIX}/share"
+
+    export RPIGO_CONFIGDIR="/etc/xdg/rpigo"
+    export RPIGO_SPOOLDIR=/var/spool/rpigo
+
+else # DEVELOPER / SOURCE MODE.
+echo developer mode
+    #
+    # Force the prefix to our working copy.
+    #
+    export RPIGO_PREFIX="$(readlink -e $(dirname $0)/..)"
+    export RPIGO_BINDIR="${RPIGO_PREFIX}/src"
+    export RPIGO_LIBDIR="${RPIGO_PREFIX}/lib"
+    export RPIGO_SHAREDIR="${RPIGO_PREFIX}/share"
+    export RPIGO_CONFIGDIR="${RPIGO_PREFIX}/config"
+
+    export RPIGO_SPOOLDIR="/tmp/rpigo.spool"; mkdir $RPIGO_SPOOLDIR
+    export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir "$RPIGO_QUEUE"
+
+fi
+
+# Variables that MUST be set and exported.
+#
+for rpigo_var in \
+    RPIGO_PREFIX \
+    RPIGO_BINDIR \
+    RPIGO_LIBDIR \
+    RPIGO_SHAREDIR \
+    RPIGO_CONFIGDIR \
+    RPIGO_SPOOLDIR
+do
+    if eval test -z "\$$rpigo_var"; then
+        echo "EX_SOFTWARE: required variable $rpigo_var not set in code."
+        exit 70
+    fi
+    eval export $rpigo_var
+done
+
+.  "${RPIGO_LIBDIR}/log.lib"
+
+rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 
 #
 # usage: daemonize prog [arg ....]
@@ -28,17 +99,6 @@ daemonize() {
     setsid $* < /dev/null &
 }
 
-export RPIGO_DEVELOPER="$(readlink -e $(dirname $0)/..)"
-export RPIGO_BINDIR="${RPIGO_DEVELOPER}/src"
-export RPIGO_LIBDIR="${RPIGO_DEVELOPER}/lib"
-export RPIGO_SHAREDIR="${RPIGO_DEVELOPER}/share"
-export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir /tmp/rpigo.queue
-export RPIGO_CONFIGDIR="${RPIGO_DEVELOPER}/config"
-
-.  "${RPIGO_LIBDIR}/log.lib"
-
-rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
-
 daemonize "${RPIGO_BINDIR}/rpigo-authd.sh" -o fifo
 
 # WIP
@@ -46,9 +106,9 @@ daemonize "${RPIGO_BINDIR}/rpigo-authd.sh" -o fifo
 
 daemonize "${RPIGO_BINDIR}/rpigo-packaged.sh"
 daemonize "${RPIGO_BINDIR}/rpigo-powerd.sh"
-daemonize "${RPIGO_BINDIR}/rpigo-serviced.sh"
 daemonize "${RPIGO_BINDIR}/rpigo-storaged.sh"
 
+daemonize "${RPIGO_BINDIR}/rpigo-serviced.sh"
 daemonize "${RPIGO_BINDIR}/rpigo-ftpd.sh"
 # WIP
 #daemonize "${RPIGO_BINDIR}/rpigo-printerd.sh"
