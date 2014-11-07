@@ -110,6 +110,7 @@ daemonize "${RPIGO_BINDIR}/rpigo-storaged.sh"
 
 daemonize "${RPIGO_BINDIR}/rpigo-serviced.sh"
 daemonize "${RPIGO_BINDIR}/rpigo-ftpd.sh"
+daemonize "${RPIGO_BINDIR}/rpigo-smbd.sh"
 # WIP
 #daemonize "${RPIGO_BINDIR}/rpigo-printerd.sh"
 
