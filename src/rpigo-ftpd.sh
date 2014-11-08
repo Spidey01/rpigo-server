@@ -30,14 +30,14 @@ fi
 # TODO: make sure RPIGO_CONFIGDIR is set.
 
 MY_CONFIG="${RPIGO_CONFIGDIR}/ftp.conf"
-MY_PIDDIR=/var/run/rpigo
-vsftpd_pidfile="${MY_PIDDIR}/vsftpd.pid"
+RPIGO_RUNDIR=/var/run/rpigo
+vsftpd_pidfile="${RPIGO_RUNDIR}/vsftpd.pid"
 avahi_pid=
 
 ftpd_start() {
     local ftp_port
 
-    [ ! -d "$MY_PIDDIR" ] && rpigo_debug "mkdir $MY_PIDDIR" && sudo mkdir "$MY_PIDDIR"
+    [ ! -d "$RPIGO_RUNDIR" ] && rpigo_debug "mkdir $RPIGO_RUNDIR" && sudo mkdir "$RPIGO_RUNDIR"
 
     rpigo_info "Starting vsftpd."
     #
