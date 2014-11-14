@@ -50,8 +50,8 @@ echo release mode
     export RPIGO_SHAREDIR="${RPIGO_PREFIX}/share"
 
     export RPIGO_CONFIGDIR="/etc/xdg/rpigo"
-    export RPIGO_SPOOLDIR=/var/spool/rpigo
-    export RPIGO_RUNDIR=/var/run/rpigo
+    export RPIGO_SPOOLDIR="/var/spool/rpigo"
+    export RPIGO_RUNDIR="/var/run/rpigo"
 
 else # DEVELOPER / SOURCE MODE.
 echo developer mode
@@ -66,7 +66,7 @@ echo developer mode
 
     export RPIGO_SPOOLDIR="/tmp/rpigo.spool"; mkdir $RPIGO_SPOOLDIR
     export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir "$RPIGO_QUEUE"
-    export RPIGO_RUNDIR=/tmp/rpigo.run"
+    export RPIGO_RUNDIR="/tmp/rpigo.run"
 
 fi
 
