@@ -34,6 +34,10 @@ RPIGO_RUNDIR=/var/run/rpigo
 vsftpd_pidfile="${RPIGO_RUNDIR}/vsftpd.pid"
 avahi_pid=
 
+# TODO: move this to a config file.
+#
+storage_root="${storage_root:-/media}"
+
 ftpd_start() {
     local ftp_port
 
@@ -45,7 +49,9 @@ ftpd_start() {
     #       paths or relative to /, not the CWD of this script.
     #
     sudo start-stop-daemon --start --make-pidfile --pidfile "${vsftpd_pidfile}" \
-        --background --exec /usr/sbin/vsftpd -- "${MY_CONFIG}" -obackground=NO
+        --background --exec /usr/sbin/vsftpd -- "${MY_CONFIG}" \
+            -obackground=NO \
+            -oanon_root="$storage_root" -olocal_root="$storage_root"
     if [ $? -eq 0 ]; then
         rpigo_info "Publishing via DNS-SD."
         ftp_port="$(grep -v '#' "$MY_CONFIG" | grep 'listen_port=[0-9]*')"

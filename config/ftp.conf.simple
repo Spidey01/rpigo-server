@@ -1,0 +1,61 @@
+#
+# This configuration file will be used for FTP support.
+#
+# It is just a run of the mill vsftpd.conf file. Only thing special about it is
+# that we use it for our own instance of vsftpd.
+
+#
+# ftp.conf.uhhh -- easy to live with defaults.
+#
+# You will be able to connect in one of two ways:
+#
+#   A.) Anonymously with a pre-configured e-mail address.
+#
+#   B.) Using a real user account on the server.
+#
+
+
+#
+# YES = anonymous logins permitted.
+# NO  = anonymous logins blocked.
+#
+# vsftp uses 'anonymous' and 'ftp' as user names for this purpose.
+# anonymous logins = usernames that accept any password, including blank.
+#
+anonymous_enable=YES
+
+# Password values accepted for anonymous logins.
+#
+secure_email_list_enable=YES
+email_password_file=/etc/xdg/rpigo/ftp.simple_passwords
+
+anon_mkdir_write_enable=YES
+anon_other_write_enable=YES
+anon_upload_enable=YES
+anon_world_readable_only=NO
+
+hide_ids=YES
+
+dirmessage_enable=YES
+
+
+#
+# Expected server behaviours.
+#
+
+listen=YES
+listen_port=21
+background=NO
+xferlog_enable=YES
+write_enable=YES
+
+
+# do we want this or userlist_deny+userlist_enable?
+local_enable=YES
+
+#
+# Tweak server behaviour.
+#
+
+delete_failed_uploads=YES
+

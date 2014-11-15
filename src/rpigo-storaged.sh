@@ -26,6 +26,8 @@ fi
 . "${RPIGO_LIBDIR}/queue.lib"
 
 
+# TODO: move this to a config file.
+#
 storage_root="${storage_root:-/media}"
 
 is_allowed_device() {

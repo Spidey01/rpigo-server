@@ -1,0 +1,84 @@
+#
+# This configuration file will be used for FTP support.
+#
+# It is just a run of the mill vsftpd.conf file. Only thing special about it is
+# that we use it for our own instance of vsftpd.
+
+#
+# ftp.conf.secure -- security focused defaults.
+#
+# You won't be able to connect without TLS and a certificate.
+#
+
+#
+# YES = anonymous logins permitted.
+# NO  = anonymous logins blocked.
+#
+# vsftp uses 'anonymous' and 'ftp' as user names for this purpose.
+# anonymous logins = usernames that accept any password, including blank.
+#
+anonymous_enable=NO
+
+#
+# Expected server behaviours.
+#
+
+listen=YES
+listen_port=21
+background=NO
+xferlog_enable=YES
+write_enable=YES
+
+
+# do we want this or userlist_deny+userlist_enable?
+local_enable=YES
+
+#
+# Tweak server behaviour.
+#
+
+delete_failed_uploads=YES
+
+#
+# SSL/TLS configuration.
+#
+
+ssl_enable=YES
+ssl_request_cert=YES
+
+#
+# Lockout insecure protocols.
+#
+ssl_sslv2=NO
+ssl_sslv3=NO
+ssl_tlsv1=YES
+# "high" encryption cipher suites.  See man ciphers (from openssl).
+ssl_ciphers=HIGH
+
+#
+# Demand SSL/TLS security.
+#
+force_anon_data_ssl=YES
+force_anon_logins_ssl=YES
+force_local_data_ssl=YES
+force_local_logins_ssl=YES
+
+#
+# Require a client certificate to connect.
+#
+
+require_cert=YES
+#
+# Set this if you want certificats to be validated.
+# Can't be used with self signed certificates.
+#
+# validate_cert=YES|NO
+# ca_certs_file=/?
+
+#
+# Paths to certificates.
+#
+
+# dsa_cert_file=
+# rsa_cert_file=/etc/ssl/private/vsftpd.pem
+
