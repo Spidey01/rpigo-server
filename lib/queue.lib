@@ -34,7 +34,15 @@ rpigo_queue_setup() {
 
     if [ -z "$1" ]; then
         rpigo_debug "$fn: Using mktemp."
-        RPIGO_QUEUE="$(mktemp -d rpigo-queue.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)"
+        #
+        # -d => directory.
+        # -t => TMPDIR:-/tmp.
+        #
+        # mktemp from GNU coreutils depreciates -t (and -p) but busybox, FreeBSD, etc
+        # all support it well and non-depreciated. So may as well use it. if we have any
+        # real porting problem it is gonna come from our long template ;).
+        #
+        RPIGO_QUEUE="$(mktemp -t -d rpigo-queue.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)"
     else
         rpigo_debug "$fn: Using \$1=$1."
         RPIGO_QUEUE="$1"
