@@ -80,11 +80,13 @@ rpigo_debug "command_parser function is $command_parser"
 # TODO: error handling.
 . "$command_backend"
 
-if ! $command_setup; then
-    WTF=$?
+
+# XXX Don't use 'if !' here. The logical negate changes $? to 0.
+$command_setup || {
+    WTF="$?"
     rpigo_error "${command_setup}() returned $WTF exit status."
     exit $WTF
-fi
+}
 
 while $command_parser COMMAND
 do
