@@ -94,7 +94,7 @@ $(LIBDIR):
 	mkdir "$@"/authd
 
 $(CONFIGDIR):
-	mkdir "$@"
+	mkdir -p "$@"
 	mkdir "$@"/packages.d
 
 $(DOCDIR):
