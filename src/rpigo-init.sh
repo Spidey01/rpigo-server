@@ -46,8 +46,8 @@ echo release mode
         && echo "Defaulting RPIGO_PREFIX=$RPIGO_PREFIX"
 
     export RPIGO_BINDIR="${RPIGO_PREFIX}/bin"
-    export RPIGO_LIBDIR="${RPIGO_PREFIX}/lib"
-    export RPIGO_SHAREDIR="${RPIGO_PREFIX}/share"
+    export RPIGO_LIBDIR="${RPIGO_PREFIX}/lib/rpigo"
+    export RPIGO_SHAREDIR="${RPIGO_PREFIX}/share/rpigo"
 
     export RPIGO_CONFIGDIR="/etc/xdg/rpigo"
     export RPIGO_SPOOLDIR="/var/spool/rpigo"
