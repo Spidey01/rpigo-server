@@ -5,7 +5,7 @@
 RPIGO_AUTHD_FIFO="${RPIGO_QUEUE}/$$.fifo"
 
 fifo_command_setup() {
-    rpigo_queue_setup
+    rpigo_queue_setup || return $?
     mkfifo "$RPIGO_AUTHD_FIFO"
 }
 
