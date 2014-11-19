@@ -34,7 +34,7 @@ rpigo_queue_setup() {
 
     if [ -z "$1" ]; then
         rpigo_debug "$fn: Using mktemp."
-        RPIGO_QUEUE="$(mktemp -u -d rpigo-queue.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)"
+        RPIGO_QUEUE="$(mktemp -d rpigo-queue.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)"
     else
         rpigo_debug "$fn: Using \$1=$1."
         RPIGO_QUEUE="$1"
