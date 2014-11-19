@@ -131,6 +131,10 @@ $(CONFIGDIR)/%.conf: config/%.conf
 	install $< "$@"
 $(CONFIGDIR)/packages.d/%.list: config/packages.d/%.list
 	install $< "$@"
+$(CONFIGDIR)/ftp.conf.secure: config/ftp.conf.secure
+	install $< "$@"
+$(CONFIGDIR)/ftp.conf.simple: config/ftp.conf.simple
+	install $< "$@"
 
 #
 # Install our Markdown files.
