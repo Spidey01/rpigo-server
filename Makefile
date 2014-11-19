@@ -59,6 +59,13 @@ CONFIG_FILES = $(addprefix $(CONFIGDIR)/,$(notdir $(shell find config -maxdepth 
 DOC_FILES = $(DOCDIR)/README.md $(DOCDIR)/HACKING.md
 
 #
+# For setting up sudo.
+#
+RPIGO_USERNAME ?= $(NAME)
+SUDOERS_TEMPLATE = sudoers
+SUDOERS_FILE = $(DESTDIR)/etc/sudoers.d/rpigo
+
+#
 # Command macros.
 #
 MKDIR = mkdir
@@ -78,7 +85,7 @@ help:
 	@echo "DESTDIR will be respected as expected if given."
 	@echo ""
 
-install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES)
+install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(SUDOERS_FILE)
 	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
 
 uninstall:
@@ -89,6 +96,7 @@ uninstall:
 
 purge: uninstall
 	rm -rf $(CONFIGDIR)
+	rm -f $(SUDOERS_FILE)
 
 .PHONY: install uninstall purge
 
@@ -147,4 +155,9 @@ $(CONFIGDIR)/ftp.conf.simple: config/ftp.conf.simple
 #
 $(DOCDIR)/%.md: %.md
 	install $< "$@"
+
+$(SUDOERS_FILE): $(SUDOERS_TEMPLATE)
+	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' "$<" > "$@"
+	chown 0:0 $@
+	chmod 0440 $@
 

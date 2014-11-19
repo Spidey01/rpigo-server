@@ -1,0 +1,13 @@
+RPIGO_USERNAME ALL=(root) NOPASSWD: \
+	/bin/chown, \
+	/bin/mkdir, \
+	/bin/mount, \
+	/bin/umount, \
+	/sbin/reboot, \
+	/sbin/shutdown, \
+	/usr/bin/avahi-publish-service, \
+	/usr/sbin/service, \
+	/usr/sbin/update-rc.d, \
+	/usr/sbin/vsftpd, \
+		\
+			/bin/true
