@@ -68,6 +68,11 @@ echo developer mode
     export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir "$RPIGO_QUEUE"
     export RPIGO_RUNDIR="/tmp/rpigo.run"
 
+    #
+    # Used because sources are named .sh but installed in release mode the
+    # extension gets dropped from the filename.
+    #
+    SCRIPT_EXT=.sh
 fi
 
 # Variables that MUST be set and exported.
@@ -98,23 +103,24 @@ rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 #
 daemonize() {
     #setsid $* >>rpigo.log 2>&1 < /dev/null &
+    rpigo_debug "executing 'setsid $* < /dev/null &'"
     setsid $* < /dev/null &
 }
 
-daemonize "${RPIGO_BINDIR}/rpigo-authd.sh" -o fifo
+daemonize "${RPIGO_BINDIR}/rpigo-authd${SCRIPT_EXT}" -o fifo
 
 # WIP
-#daemonize "${RPIGO_BINDIR}/rpigo-networkd.sh"
+#daemonize "${RPIGO_BINDIR}/rpigo-networkd${SCRIPT_EXT}"
 
-daemonize "${RPIGO_BINDIR}/rpigo-packaged.sh"
-daemonize "${RPIGO_BINDIR}/rpigo-powerd.sh"
-daemonize "${RPIGO_BINDIR}/rpigo-storaged.sh"
+daemonize "${RPIGO_BINDIR}/rpigo-packaged${SCRIPT_EXT}"
+daemonize "${RPIGO_BINDIR}/rpigo-powerd${SCRIPT_EXT}"
+daemonize "${RPIGO_BINDIR}/rpigo-storaged${SCRIPT_EXT}"
 
-daemonize "${RPIGO_BINDIR}/rpigo-serviced.sh"
-daemonize "${RPIGO_BINDIR}/rpigo-ftpd.sh"
-daemonize "${RPIGO_BINDIR}/rpigo-smbd.sh"
+daemonize "${RPIGO_BINDIR}/rpigo-serviced${SCRIPT_EXT}"
+daemonize "${RPIGO_BINDIR}/rpigo-ftpd${SCRIPT_EXT}"
+daemonize "${RPIGO_BINDIR}/rpigo-smbd${SCRIPT_EXT}"
 # WIP
-#daemonize "${RPIGO_BINDIR}/rpigo-printerd.sh"
+#daemonize "${RPIGO_BINDIR}/rpigo-printerd${SCRIPT_EXT}"
 
 rpigo_info "waiting on childrens."
 wait
