@@ -80,7 +80,11 @@ rpigo_debug "command_parser function is $command_parser"
 # TODO: error handling.
 . "$command_backend"
 
-$command_setup
+if ! $command_setup; then
+    WTF=$?
+    rpigo_error "${command_setup}() returned $WTF exit status."
+    exit $WTF
+fi
 
 while $command_parser COMMAND
 do
