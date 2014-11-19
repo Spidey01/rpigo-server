@@ -25,6 +25,7 @@ fi
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 
+rpigo_queue_setup
 
 while read message_file
 do

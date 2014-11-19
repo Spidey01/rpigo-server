@@ -94,6 +94,8 @@ mount_device() {
     fi
 }
 
+rpigo_queue_setup
+
 while read device_or_message
 do
     rpigo_debug "device_or_message=$device_or_message"

@@ -30,6 +30,8 @@ get_arg() {
     echo "$3"
 }
 
+rpigo_queue_setup
+
 while read message_file
 do
     rpigo_debug "message_file=$message_file"

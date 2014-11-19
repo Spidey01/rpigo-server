@@ -75,6 +75,7 @@ ftpd_stop() {
 #
 [ "$enable_ftpd" = true ] && ftpd_start
 
+rpigo_queue_setup
 
 while read message_file
 do

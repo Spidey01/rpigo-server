@@ -60,6 +60,7 @@ smb_disable() {
 
 [ "$enable_smb" = true ] && smb_enable
 
+rpigo_queue_setup
 
 while read message_file
 do
