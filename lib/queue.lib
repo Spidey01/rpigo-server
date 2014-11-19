@@ -64,9 +64,9 @@ rpigo_queue_wait() {
     if type inotifywait >/dev/null; then
         inotifywait --exclude '.fifo$' -m -q -e create --format "%w%f" "$RPIGO_QUEUE"
     else
-        echo "INOTIFYWAIT NOT INSTALLED."
-        echo 'Install inotify-tools or port me to your OS!'
-        exit 72 # EX_OSFILE, critical OS file missing.
+        rpigo_error "INOTIFYWAIT NOT INSTALLED."
+        rpigo_warn 'Install inotify-tools or port me to your OS!'
+        rpigo_fatal -e 72 "Critical OS file missing." # EX_OSFILE.
     fi
 }
 
