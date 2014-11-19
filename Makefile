@@ -58,6 +58,12 @@ CONFIG_FILES = $(addprefix $(CONFIGDIR)/,$(notdir $(shell find config -maxdepth 
 
 DOC_FILES = $(DOCDIR)/README.md $(DOCDIR)/HACKING.md
 
+#
+# Command macros.
+#
+MKDIR = mkdir
+MKDIR_P = $(MKDIR) -p
+
 help:
 	@echo "Available targets and variables are as follows:"
 	@echo ""
@@ -87,18 +93,18 @@ purge: uninstall
 .PHONY: install uninstall purge
 
 $(SHAREDIR):
-	mkdir "$@"
+	$(MKDIR_P) "$@"
 
 $(LIBDIR):
-	mkdir "$@"
-	mkdir "$@"/authd
+	$(MKDIR_P) "$@"
+	$(MKDIR_P) "$@"/authd
 
 $(CONFIGDIR):
-	mkdir -p "$@"
-	mkdir "$@"/packages.d
+	$(MKDIR_P) -p "$@"
+	$(MKDIR_P) "$@"/packages.d
 
 $(DOCDIR):
-	mkdir "$@"
+	$(MKDIR_P) "$@"
 
 #
 # Pattern rules.
