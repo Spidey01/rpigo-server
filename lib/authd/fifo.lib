@@ -2,10 +2,13 @@
 # FIFO based backend for authd.
 #
 
-RPIGO_AUTHD_FIFO="${RPIGO_QUEUE}/$$.fifo"
+# This won't be valid until the setup function has been called.
+#
+RPIGO_AUTHD_FIFO=""
 
 fifo_command_setup() {
     rpigo_queue_setup || return $?
+    export RPIGO_AUTHD_FIFO="${RPIGO_QUEUE}/$$.fifo"
     mkfifo "$RPIGO_AUTHD_FIFO"
 }
 
