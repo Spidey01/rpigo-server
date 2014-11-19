@@ -25,7 +25,7 @@
 rpigo_queue_setup() {
     local fn
 
-    fn='rpigo_queue_setup()'
+    fn="${FUNCNAME[0]}()"
 
     if [ -n "$RPIGO_QUEUE" ]; then
         rpigo_warn "$fn: RPIGO_QUEUE already setup. Skipping."
@@ -44,8 +44,7 @@ rpigo_queue_setup() {
         mkdir -p "$RPIGO_QUEUE"
     fi
     if [ $? -ne 0 ]; then
-        rpigo_error "$fn: Failed making queue."
-        return 73 # EX_CANTCREAT
+        rpigo_fatal -e 73 "$fn: Failed." # EX_CANTCREATE
     fi
     rpigo_debug "$fn: export RPIGO_QUEUE='$RPIGO_QUEUE'"
     export RPIGO_QUEUE
