@@ -27,3 +27,25 @@ rpigo_error() {
     echo "$(basename $0)/e(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
 }
 
+rpigo_fatal() {
+    local es opt
+
+    es=1
+
+    while getopts "e:" opt; do
+        case $opt in
+            e)
+                es=$OPTARG
+                ;;
+            \?)
+                echo "${FUNCNAME[0]}(): Invalid option: -$OPTARG" 1>&2
+                ;;
+        esac
+    done
+    shift `expr $OPTIND - 1`
+
+    echo "$(basename $0)/wtf(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+    rpigo_warn "Aborting program with exit status $es."
+    exit $es
+}
+
