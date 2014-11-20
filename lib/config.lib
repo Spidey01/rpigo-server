@@ -11,7 +11,7 @@
 #   -s => append evaluate variable names with SUFFIX.
 #
 config_eval() {
-    local fn opt prefix suffix line var_name var_value
+    local fn opt prefix suffix filename line line_number var_name var_value
 
     fn="${FUNCNAME[0]}()"
 
@@ -31,19 +31,26 @@ config_eval() {
     done
     shift `expr $OPTIND - 1`
 
-    echo "\$1=$1"
-    while read line
+    for filename 
     do
-        rpigo_debug "$fn: line='$line'"
-        echo $line | grep -q '#' && continue
+        rpigo_debug "SOF $filename"
+        line_number=0
+        while read line
+        do
+            line_number=$(($line_number + 1))
+            rpigo_debug "$fn: line='$line'"
+            echo $line | grep -q '#' && continue
 
-        var_name="$(echo $line | sed -e 's/\s*=\s*/\n/g' | head -n 1)"
-        var_value="$(echo $line | sed -e 's/\s*=\s*/\n/g' | tail -n 1)"
+            var_name="$(echo $line | sed -e 's/\s*=\s*/\n/g' | head -n 1)"
+            var_value="$(echo $line | sed -e 's/\s*=\s*/\n/g' | tail -n 1)"
 
-        rpigo_debug "eval planned: '${prefix}${var_name}${suffix}=${var_value}'"
-        eval "${prefix}${var_name}${suffix}=${var_value}"
+            rpigo_debug "$fn:${filename}:${line_number}: " \
+                "eval planned: '${prefix}${var_name}${suffix}=${var_value}'"
+            eval "${prefix}${var_name}${suffix}=${var_value}"
 
-    done < "$1"
+        done < "$filename"
+        rpigo_debug "EOF $filename"
+    done
 }
 
 #
