@@ -3,6 +3,7 @@ RPIGO_USERNAME ALL=(root) NOPASSWD: \
 	/bin/mkdir, \
 	/bin/mount, \
 	/bin/umount, \
+	/sbin/blkid, \
 	/sbin/reboot, \
 	/sbin/shutdown, \
 	/usr/bin/avahi-publish-service, \

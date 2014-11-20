@@ -49,6 +49,11 @@ fi
 #fi
 
 
+if ! installed blkid; then
+    apt_install util-linux
+fi
+
+
 if ! installed smbpasswd; then
     apt_install samba samba-common-bin
 fi
