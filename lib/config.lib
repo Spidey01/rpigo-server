@@ -39,6 +39,7 @@ config_eval() {
         do
             line_number=$(($line_number + 1))
             rpigo_debug "$fn: line='$line'"
+            [ -z "$line" ] && continue
             echo $line | grep -q '#' && continue
 
             var_name="$(echo $line | sed -e 's/\s*=\s*/\n/g' | head -n 1)"
