@@ -8,7 +8,7 @@
 config_eval() {
     local fn line var_name var_value
 
-    fn='eval_config()'
+    fn="${FUNCNAME[0]}()"
 
     while read line
     do
@@ -21,7 +21,7 @@ config_eval() {
         rpigo_debug "eval planned: '${var_name}=${var_value}'"
         eval "${var_name}=${var_value}"
 
-    done < "$MY_CONFIG"
+    done < "$1"
 }
 
 #
