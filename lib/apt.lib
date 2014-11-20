@@ -21,22 +21,22 @@ apt_get_packages() {
 
 
 apt_install() {
-    echo sudo apt-get install --dry-run -y "$1"
+    echo sudo -n apt-get install --dry-run -y "$1"
 }
 
 
 apt_remove() {
-    echo sudo apt-get remove --dry-run -y "$1"
+    echo sudo -n apt-get remove --dry-run -y "$1"
     # or do we want to 'purge' or 'remove' then 'autoremove' ?
 }
 
 
 apt_update() {
-    sudo apt-get update
+    sudo -n apt-get update
 }
 
 
 apt_upgrade() {
-    echo sudo apt-get upgrade --dry-run -y "$1"
+    echo sudo -n apt-get upgrade --dry-run -y "$1"
 }
 

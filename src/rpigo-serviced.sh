@@ -47,20 +47,20 @@ do
                     exit 0
                     ;;
                 SERVICE\ START\ *)
-                    #rpigo_debug "sudo service $(echo $command | cut -d' ' -f 3) start"
-                    sudo service $(get_arg $command) start
+                    #rpigo_debug "sudo -n service $(echo $command | cut -d' ' -f 3) start"
+                    sudo -n service $(get_arg $command) start
                     ;;
                 SERVICE\ STOP\ *)
-                    sudo service $(get_arg $command) stop
+                    sudo -n service $(get_arg $command) stop
                     ;;
                 SERVICE\ RESTART\ *)
-                    sudo service $(get_arg $command) restart
+                    sudo -n service $(get_arg $command) restart
                     ;;
                 SERVICE\ ENABLE\ *)
-                    rpigo_debug "sudo ... $(get_arg $command)"
+                    rpigo_debug "sudo -n ... $(get_arg $command)"
                     ;;
                 SERVICE\ DISABLE\ *)
-                    rpigo_debug "sudo ... $(get_arg $command)"
+                    rpigo_debug "sudo -n ... $(get_arg $command)"
                     ;;
                 *)
                     echo "handle command: $command ..."

@@ -33,9 +33,9 @@ clean_up_needed=
 
 ensure_samba_running() {
     rpigo_debug 'Are samba services running?'
-    if ! sudo service samba status; then
+    if ! sudo -n service samba status; then
         rpigo_debug 'Starting samba service.'
-        sudo service samba start
+        sudo -n service samba start
     fi
 }
 

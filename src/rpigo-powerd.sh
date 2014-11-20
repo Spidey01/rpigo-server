@@ -43,10 +43,10 @@ do
                     exit 0
                     ;;
                 SHUTDOWN)
-                    sudo shutdown -hP now
+                    sudo -n shutdown -hP now
                     ;;
                 REBOOT)
-                    sudo reboot
+                    sudo -n reboot
                     ;;
                 *)
                     echo "handle command: $command ..."
