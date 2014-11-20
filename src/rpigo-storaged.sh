@@ -24,15 +24,25 @@ fi
 
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
+. "${RPIGO_LIBDIR}/config.lib"
 
 
-# TODO: move this to a config file.
+#
+# Configuration directives we care about.
+#
+my_config="${RPIGO_CONFIGDIR}/storage.conf"
+
+#
+# Default location to mount media if not specified in the $my_config or
+# /etc/defaults/rpigo files.
 #
 storage_root="${storage_root:-/media}"
+
 
 is_allowed_device() {
     echo "$1" | grep -q -E '/dev/sd[a-z]+[0-9]+$'
 }
+
 
 #
 # Mount sepcified device IAW config.
@@ -93,6 +103,11 @@ mount_device() {
         fi
     fi
 }
+
+
+if ! config_eval "$my_config"; then
+    rpigo_error "error parsing configuration file '${my_config}'."
+fi
 
 rpigo_queue_setup
 
