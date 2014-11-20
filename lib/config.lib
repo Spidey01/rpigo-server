@@ -5,11 +5,33 @@
 #
 # Parse config and evaluate as environment variables.
 #
+# usage: config_eval [-p PREFIX] [-S SUFFIX] file
+#
+#   -p => prefix evaluated variable names with PREFIX.
+#   -s => append evaluate variable names with SUFFIX.
+#
 config_eval() {
-    local fn line var_name var_value
+    local fn opt prefix suffix line var_name var_value
 
     fn="${FUNCNAME[0]}()"
 
+    while getopts "p:s:" opt; do
+        case $opt in
+            p)
+                prefix="$OPTARG"
+                ;;
+            s)
+                suffix="$OPTARG"
+                ;;
+            \?)
+                echo "$fn: Invalid option: -$OPTARG" 1>&2
+                return $OPTERR
+                ;;
+        esac
+    done
+    shift `expr $OPTIND - 1`
+
+    echo "\$1=$1"
     while read line
     do
         rpigo_debug "$fn: line='$line'"
@@ -18,8 +40,8 @@ config_eval() {
         var_name="$(echo $line | sed -e 's/\s*=\s*/\n/g' | head -n 1)"
         var_value="$(echo $line | sed -e 's/\s*=\s*/\n/g' | tail -n 1)"
 
-        rpigo_debug "eval planned: '${var_name}=${var_value}'"
-        eval "${var_name}=${var_value}"
+        rpigo_debug "eval planned: '${prefix}${var_name}${suffix}=${var_value}'"
+        eval "${prefix}${var_name}${suffix}=${var_value}"
 
     done < "$1"
 }
