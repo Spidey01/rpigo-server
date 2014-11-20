@@ -39,6 +39,7 @@ rpigo_fatal() {
                 ;;
             \?)
                 echo "${FUNCNAME[0]}(): Invalid option: -$OPTARG" 1>&2
+                return $OPTERR
                 ;;
         esac
     done
