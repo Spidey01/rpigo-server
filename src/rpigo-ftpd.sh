@@ -44,6 +44,13 @@ ftpd_start() {
 
     [ ! -d "$RPIGO_RUNDIR" ] && rpigo_debug "mkdir $RPIGO_RUNDIR" && sudo -n mkdir "$RPIGO_RUNDIR"
 
+    # This is set because Debian's init script for vsftp makes it before launch
+    # and the default is under the /run tmpfs.
+    #
+    if config_grep -q "secure_chroot_dir" "$MY_CONFIG"; then
+        mkdir -p $(config_grep "secure_chroot_dir" "$MY_CONFIG";
+    fi
+
     rpigo_info "Starting vsftpd."
     #
     # Note: this will --chdir / by default. So file paths have to be absolute

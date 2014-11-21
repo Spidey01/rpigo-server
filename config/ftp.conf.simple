@@ -58,4 +58,5 @@ local_enable=YES
 #
 
 delete_failed_uploads=YES
+secure_chroot_dir=/var/run/vsftpd/empty
 
