@@ -34,7 +34,8 @@ RPIGO_RUNDIR=/var/run/rpigo
 vsftpd_pidfile="${RPIGO_RUNDIR}/vsftpd.pid"
 avahi_pid=
 
-# TODO: move this to a config file.
+# Default location to mount media if not specified in the
+# $RPIGO_CONFIGDIR/storage.conf or # /etc/defaults/rpigo files.
 #
 storage_root="${storage_root:-/media}"
 
@@ -69,6 +70,12 @@ ftpd_stop() {
         && rpigo_info "Unpublishing via DNS-SD." \
         && sudo -n kill "$avahi_pid"
 }
+
+
+storage_conf="${RPIGO_CONFIGDIR}/storage.conf"
+if ! config_eval "$storage_conf"; then
+    rpigo_error "error parsing configuration file '${storage_conf}'."
+fi
 
 #
 # Enable if 
