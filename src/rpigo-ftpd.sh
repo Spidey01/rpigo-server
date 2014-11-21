@@ -30,7 +30,6 @@ fi
 # TODO: make sure RPIGO_CONFIGDIR is set.
 
 MY_CONFIG="${RPIGO_CONFIGDIR}/ftp.conf"
-RPIGO_RUNDIR=/var/run/rpigo
 vsftpd_pidfile="${RPIGO_RUNDIR}/vsftpd.pid"
 avahi_pid=
 
