@@ -34,7 +34,7 @@ BINDIR = $(DESTDIR)$(PREFIX)/bin
 # How to handle this? Some systems have /usr/local/etc; most do not.
 # Probably should use $(DESTDIR)/etc/xdg/$(NAME) for this.
 #
-CONFIGDIR = $(DESTDIR)$(PREFIX)/etc/xdg/$(NAME)
+CONFIGDIR = $(DESTDIR)/etc/xdg/$(NAME)
 DOCDIR = $(DESTDIR)$(PREFIX)/share/doc/$(NAME)
 
 #
