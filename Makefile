@@ -127,6 +127,12 @@ useradd:
 userdel:
 	userdel "$(RPIGO_USERNAME)"
 
+$(SUDOERS_FILE): $(SUDOERS_TEMPLATE)
+	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' "$<" > "$@"
+	chown 0:0 $@
+	chmod 0440 $@
+
+
 #
 # Pattern rules.
 #
@@ -172,9 +178,4 @@ $(CONFIGDIR)/storage.config: config/storage.config
 #
 $(DOCDIR)/%.md: %.md
 	install $< "$@"
-
-$(SUDOERS_FILE): $(SUDOERS_TEMPLATE)
-	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' "$<" > "$@"
-	chown 0:0 $@
-	chmod 0440 $@
 
