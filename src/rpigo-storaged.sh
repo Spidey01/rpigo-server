@@ -48,7 +48,7 @@ is_allowed_device() {
 # Mount sepcified device IAW config.
 #
 mount_device() {
-    local fn new_device volume_name volume_format volume_options mount_point
+    local fn new_device volume_name volume_format volume_options mount_point mount_command
 
     fn="${FUNCNAME[0]}()"
     new_device="$1"
@@ -94,17 +94,26 @@ mount_device() {
         [ -n "$storage_mount_noexec" ]  && volume_options="${volume_options},noexec"
         [ -n "$storage_mount_nodev" ]   && volume_options="${volume_options},nodev"
         [ -n "$storage_mount_nosuid" ]  && volume_options="${volume_options},nosuid"
-        [ -n "$storage_mount_uid" ]     && volume_options="${volume_options},uid=$storage_mount_uid"
-        [ -n "$storage_mount_gid" ]     && volume_options="${volume_options},gid=$storage_mount_gid"
+        # Humbug, these work on FAT and some other stuff but bomb out on ext.
+        #[ -n "$storage_mount_uid" ]     && volume_options="${volume_options},uid=$storage_mount_uid"
+        #[ -n "$storage_mount_gid" ]     && volume_options="${volume_options},gid=$storage_mount_gid"
         [ -n "$volume_options" ]        && volume_options="-o defaults${volume_options}"
+
 
         #
         # Get it done ;).
         #
         mount_point="${storage_root}/${volume_name}"
         rpigo_info "mount point for \"$new_device\" is \"$mount_point\""
-        sudo -n mkdir -m 0007 -p "$mount_point"
-        if ! sudo -n mount -t "$volume_format" $volume_options $storage_mount_options "$new_device" "$mount_point"
+        sudo -n mkdir -m 0700 -p "$mount_point" && rpigo_info "created mount point $mount_point"
+        sudo -n chown "${storage_mount_uid}:${storage_mount_gid}" "$mount_point"
+
+        mount_command="sudo -n mount -t \"$volume_format\" $volume_options $storage_mount_options \"$new_device\" \"$mount_point\""
+
+        rpigo_debug "mount command => '$mount_command'"
+
+        #if ! sudo -n mount -t "$volume_format" $volume_options $storage_mount_options "$new_device" "$mount_point"
+        if ! eval $mount_command
         then
             rpigo_error "Looks like mounting '$new_device' on '$mount_point' failed."
         fi
