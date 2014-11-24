@@ -74,15 +74,21 @@ MKDIR_P = $(MKDIR) -p
 help:
 	@echo "Available targets and variables are as follows:"
 	@echo ""
-	@printf "\t* help:\n"
+	@printf "\t* help: You're reading it.\n"
 	@printf "\t* install: Install to $(DESTDIR)$(PREFIX)\n"
 	@printf "\t* uninstall: uninstall files but leave $(CONFIGDIR)\n"
 	@printf "\t* purge: uninstall + purge $(CONFIGDIR)\n"
+	@printf "\t* useradd: do a useradd for $(RPIGO_USERNAME).\n"
+	@printf "\t* userdel: do a userdel for $(RPIGO_USERNAME).\n"
 	@echo ""
 	@echo "You can change install location by setting PREFIX=yourpath."
 	@echo 'I.e.$$ make PREFIX=/usr install'
 	@echo ""
 	@echo "DESTDIR will be respected as expected if given."
+	@echo ""
+	@echo "RPIGO_USERNAME can be set to the username to run as."
+	@echo "The useradd, userdel, and various install dependencies"
+	@echo "will respect this variable."
 	@echo ""
 
 install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(SUDOERS_FILE)
@@ -113,6 +119,13 @@ $(CONFIGDIR):
 
 $(DOCDIR):
 	$(MKDIR_P) "$@"
+
+# XXX should we use /bin/sh or /usr/sbin/nologin?
+useradd:
+	useradd -c "RPIGO Service Daemon" -D -M -d /srv/rpigo -s /usr/sbin/nologin "$(RPIGO_USERNAME)"
+
+userdel:
+	userdel "$(RPIGO_USERNAME)"
 
 #
 # Pattern rules.
