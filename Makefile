@@ -70,6 +70,7 @@ SUDOERS_FILE = $(DESTDIR)/etc/sudoers.d/rpigo
 #
 MKDIR = mkdir
 MKDIR_P = $(MKDIR) -p
+INSTALL_CONFIG = install -m 0644 -o root -g root
 
 help:
 	@echo "Available targets and variables are as follows:"
@@ -161,17 +162,17 @@ $(BINDIR)/%: src/%.sh
 # Install .conf and related files from config.
 #
 $(CONFIGDIR)/%.conf: config/%.conf
-	install $< "$@"
+	$(INSTALL_CONFIG) $< "$@"
 $(CONFIGDIR)/packages.d/%.list: config/packages.d/%.list
-	install $< "$@"
+	$(INSTALL_CONFIG) $< "$@"
 $(CONFIGDIR)/ftp.conf.secure: config/ftp.conf.secure
-	install $< "$@"
-	chown root:root $@
+	$(INSTALL_CONFIG) $< "$@"
 $(CONFIGDIR)/ftp.conf.simple: config/ftp.conf.simple
-	install $< "$@"
-	chown root:root $@
+	$(INSTALL_CONFIG) $< "$@"
 $(CONFIGDIR)/storage.config: config/storage.config
 	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' "$<" > "$@"
+	chmod 0644 $@
+	chown root:root $@
 
 #
 # Install our Markdown files.
