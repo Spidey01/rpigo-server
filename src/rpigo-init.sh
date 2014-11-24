@@ -56,6 +56,7 @@ echo release mode
     export RPIGO_CONFIGDIR="/etc/xdg/rpigo"
     export RPIGO_SPOOLDIR="/var/spool/rpigo"
     export RPIGO_RUNDIR="/var/run/rpigo"
+    export RPIGO_LOGDIR="/var/log/rpigo"
 
     [ -n "$RPIGO_LOGLEVEL" ] || export RPIGO_LOGLEVEL=3
 
@@ -73,6 +74,7 @@ echo developer mode
     export RPIGO_SPOOLDIR="/tmp/rpigo.spool"; mkdir $RPIGO_SPOOLDIR
     export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir "$RPIGO_QUEUE"
     export RPIGO_RUNDIR="/tmp/rpigo.run"
+    export RPIGO_LOGDIR="/tmp/rpigo.log"
 
     [ -n "$RPIGO_LOGLEVEL" ] || export RPIGO_LOGLEVEL=4
 
@@ -102,6 +104,7 @@ done
 
 .  "${RPIGO_LIBDIR}/log.lib"
 
+rpigo_log_setup
 rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 
 #

@@ -1,5 +1,13 @@
 # vim: set filetype=sh :
 
+
+rpigo_log_setup() {
+    [ -d "$RPIGO_LOGDIR" ] || sudo -n mkdir -p "$RPIGO_LOGDIR"
+    sudo -n chmod 0750 "$RPIGO_LOGDIR"
+    sudo -n chown "${LOGNAME}:adm" "$RPIGO_LOGDIR"
+}
+
+
 rpigo_log_timestamp() {
     if [ -z "$RPIGO_DEVELOPER" ]; then
         date +"%Y-%m-%dT%H:%M%z" 

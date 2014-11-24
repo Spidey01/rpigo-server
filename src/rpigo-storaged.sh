@@ -26,6 +26,8 @@ fi
 . "${RPIGO_LIBDIR}/queue.lib"
 . "${RPIGO_LIBDIR}/config.lib"
 
+rpigo_log_setup
+
 
 #
 # Configuration directives we care about.

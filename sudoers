@@ -1,4 +1,5 @@
 RPIGO_USERNAME ALL=(root) NOPASSWD: \
+	/bin/chmod, \
 	/bin/chown, \
 	/bin/mkdir, \
 	/bin/mount, \
