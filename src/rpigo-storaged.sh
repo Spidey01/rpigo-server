@@ -82,6 +82,12 @@ mount_device() {
         type mkfs."${volume_format}" >/dev/null 2>/dev/null || rpigo_warn "$fn: mkfs.$volume_format doesn't exist."
 
         #
+        # these mount options have dynamic defaults if not in the config.
+        #
+        [ -z "$storage_mount_uid" ] && storage_mount_uid=$(id -u)
+        [ -z "$storage_mount_gid" ] && storage_mount_gid=$(id -g)
+
+        #
         # Handle mount options.
         #
         [ -n "$storage_mount_ro" ]      && volume_options="${volume_options},ro"
