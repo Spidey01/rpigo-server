@@ -1,3 +1,4 @@
+# vim: set filetype=sh :
 
 rpigo_log_timestamp() {
     if [ -z "$RPIGO_DEVELOPER" ]; then
@@ -7,28 +8,52 @@ rpigo_log_timestamp() {
     fi
 }
 
-rpigo_trace() {
-    echo "$(basename $0)/x(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+
+rpigo_log_message() {
+    local level
+    level="$1"
+    shift
+
+    case "$level" in
+        x) ;;
+        d) ;;
+        i) ;;
+        w) ;;
+        e) ;;
+        wtf) ;;
+        *)
+            echo "${FUNCNAME[0]}(): Invalid log level: $level" 1>&2
+            return 64 # EX_USAGE
+    esac
+
+    echo "$(basename $0)/${level}(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
 }
 
+
+rpigo_trace() {
+    rpigo_log_message x $*
+}
+
+
 rpigo_debug() {
-    echo "$(basename $0)/d(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+    rpigo_log_message d $*
 }
 
 
 rpigo_info() {
-    echo "$(basename $0)/i(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+    rpigo_log_message i $*
 }
 
 
 rpigo_warn() {
-    echo "$(basename $0)/w(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+    rpigo_log_message w $*
 }
 
 
 rpigo_error() {
-    echo "$(basename $0)/e(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+    rpigo_log_message e $*
 }
+
 
 rpigo_fatal() {
     local es opt
@@ -48,7 +73,7 @@ rpigo_fatal() {
     done
     shift `expr $OPTIND - 1`
 
-    echo "$(basename $0)/wtf(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+    rpigo_log_message wtf $*
     rpigo_warn "Aborting program with exit status $es."
     exit $es
 }
