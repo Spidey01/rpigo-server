@@ -10,20 +10,22 @@ rpigo_log_timestamp() {
 
 
 rpigo_log_message() {
-    local level emsg
+    local level emsg n
 
     level="$1"
     shift
 
     emsg="${FUNCNAME[0]}(): Invalid log level: $level"
 
+    n="${RPIGO_LOGLEVEL:-0}"
+
     case "$level" in
-        x) ;;
-        d) ;;
-        i) ;;
-        w) ;;
-        e) ;;
-        wtf) ;;
+        x) [ $n -ge 5 ] || return ;;
+        d) [ $n -ge 4 ] || return ;;
+        i) [ $n -ge 3 ] || return ;;
+        w) [ $n -ge 2 ] || return ;;
+        e) [ $n -ge 1 ] || return ;;
+        wtf) ;; # always permit
         *)
             rpigo_error "$emsg"
             # also force an output.
