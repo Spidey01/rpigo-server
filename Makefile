@@ -122,7 +122,7 @@ $(DOCDIR):
 
 # XXX should we use /bin/sh or /usr/sbin/nologin?
 useradd:
-	useradd -c "RPIGO Service Daemon" -D -M -d /srv/rpigo -s /usr/sbin/nologin "$(RPIGO_USERNAME)"
+	useradd -c "RPIGO Service Daemon" -r -M -d /srv/rpigo -s /usr/sbin/nologin "$(RPIGO_USERNAME)"
 
 userdel:
 	userdel "$(RPIGO_USERNAME)"
