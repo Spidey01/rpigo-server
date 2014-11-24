@@ -96,9 +96,9 @@ mount_device() {
         # Get it done ;).
         #
         mount_point="${storage_root}/${volume_name}"
-        rpigo_info "mount point for $new_deice is $mount_point"
+        rpigo_info "mount point for \"$new_device\" is \"$mount_point\""
         sudo -n mkdir -m 0007 -p "$mount_point"
-        if ! sudo mount -t "$volume_format" $volume_options $storage_mount_options "$new_device" "$mount_point"
+        if ! sudo -n mount -t "$volume_format" $volume_options $storage_mount_options "$new_device" "$mount_point"
         then
             rpigo_error "Looks like mounting '$new_device' on '$mount_point' failed."
         fi
