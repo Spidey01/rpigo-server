@@ -7,6 +7,9 @@ rpigo_log_timestamp() {
     fi
 }
 
+rpigo_trace() {
+    echo "$(basename $0)/x(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+}
 
 rpigo_debug() {
     echo "$(basename $0)/d(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2

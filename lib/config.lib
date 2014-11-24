@@ -38,14 +38,14 @@ config_eval() {
         while read line
         do
             line_number=$(($line_number + 1))
-            rpigo_debug "$fn: line='$line'"
+            rpigo_trace "$fn: line='$line'"
             [ -z "$line" ] && continue
             echo $line | grep -q '#' && continue
 
             var_name="$(echo $line | sed -e 's/\s*=\s*/\n/g' | head -n 1)"
             var_value="$(echo $line | sed -e 's/\s*=\s*/\n/g' | tail -n 1)"
 
-            rpigo_debug "$fn:${filename}:${line_number}: " \
+            rpigo_trace "$fn:${filename}:${line_number}: " \
                 "eval planned: '${prefix}${var_name}${suffix}=${var_value}'"
             eval "${prefix}${var_name}${suffix}=${var_value}"
 
