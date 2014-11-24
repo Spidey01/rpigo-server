@@ -104,7 +104,7 @@ purge: uninstall
 	rm -rf $(CONFIGDIR)
 	rm -f $(SUDOERS_FILE)
 
-.PHONY: install uninstall purge
+.PHONY: install uninstall purge useradd userdel
 
 $(SHAREDIR):
 	$(MKDIR_P) "$@"
