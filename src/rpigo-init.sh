@@ -23,11 +23,15 @@
 #
 # usage: rpigo-init.sh [options]
 #
-while getopts "d" opt; do
+while getopts "dv" opt; do
     case $opt in
         d)
             # enable developer mode.
             export RPIGO_DEVELOPER=true
+            ;;
+        v)
+            # max logging.
+            export RPIGO_LOGLEVEL=999
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
@@ -53,6 +57,8 @@ echo release mode
     export RPIGO_SPOOLDIR="/var/spool/rpigo"
     export RPIGO_RUNDIR="/var/run/rpigo"
 
+    [ -n "$RPIGO_LOGLEVEL" ] || export RPIGO_LOGLEVEL=3
+
 else # DEVELOPER / SOURCE MODE.
 echo developer mode
     #
@@ -67,6 +73,8 @@ echo developer mode
     export RPIGO_SPOOLDIR="/tmp/rpigo.spool"; mkdir $RPIGO_SPOOLDIR
     export RPIGO_QUEUE="/tmp/rpigo.queue"; mkdir "$RPIGO_QUEUE"
     export RPIGO_RUNDIR="/tmp/rpigo.run"
+
+    [ -n "$RPIGO_LOGLEVEL" ] || export RPIGO_LOGLEVEL=4
 
     #
     # Used because sources are named .sh but installed in release mode the
