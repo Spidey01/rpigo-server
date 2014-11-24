@@ -10,9 +10,12 @@ rpigo_log_timestamp() {
 
 
 rpigo_log_message() {
-    local level
+    local level emsg
+
     level="$1"
     shift
+
+    emsg="${FUNCNAME[0]}(): Invalid log level: $level"
 
     case "$level" in
         x) ;;
@@ -22,11 +25,13 @@ rpigo_log_message() {
         e) ;;
         wtf) ;;
         *)
-            echo "${FUNCNAME[0]}(): Invalid log level: $level" 1>&2
+            rpigo_error "$emsg"
+            # also force an output.
+            echo "$emsg" 1>&2
             return 64 # EX_USAGE
     esac
 
-    echo "$(basename $0)/${level}(pid=$$, $(rpigo_log_timestamp)):" $* 1>&2
+    echo "$(basename $0)/${level}(pid=$$, $(rpigo_log_timestamp)):" $* | tee -a "${RPIGO_LOGFILE:-/dev/null}" 1>&2
 }
 
 
