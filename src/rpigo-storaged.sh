@@ -95,8 +95,10 @@ mount_device() {
         [ -n "$storage_mount_nodev" ]   && volume_options="${volume_options},nodev"
         [ -n "$storage_mount_nosuid" ]  && volume_options="${volume_options},nosuid"
         # Humbug, these work on FAT and some other stuff but bomb out on ext.
-        #[ -n "$storage_mount_uid" ]     && volume_options="${volume_options},uid=$storage_mount_uid"
-        #[ -n "$storage_mount_gid" ]     && volume_options="${volume_options},gid=$storage_mount_gid"
+        if [ "$volume_format" = "vfat" ]; then
+            [ -n "$storage_mount_uid" ] && volume_options="${volume_options},uid=$storage_mount_uid"
+            [ -n "$storage_mount_gid" ] && volume_options="${volume_options},gid=$storage_mount_gid"
+        fi
         [ -n "$volume_options" ]        && volume_options="-o defaults${volume_options}"
 
 
