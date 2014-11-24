@@ -147,10 +147,12 @@ $(CONFIGDIR)/packages.d/%.list: config/packages.d/%.list
 	install $< "$@"
 $(CONFIGDIR)/ftp.conf.secure: config/ftp.conf.secure
 	install $< "$@"
-    chown root:root $@
+	chown root:root $@
 $(CONFIGDIR)/ftp.conf.simple: config/ftp.conf.simple
 	install $< "$@"
-    chown root:root $@
+	chown root:root $@
+$(CONFIGDIR)/storage.config: config/storage.config
+	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' "$<" > "$@"
 
 #
 # Install our Markdown files.
