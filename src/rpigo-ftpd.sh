@@ -47,7 +47,7 @@ ftpd_start() {
     # and the default is under the /run tmpfs.
     #
     if config_grep -q "secure_chroot_dir" "$MY_CONFIG"; then
-        mkdir -p $(config_grep "secure_chroot_dir" "$MY_CONFIG";
+        mkdir -p $(config_grep "secure_chroot_dir" "$MY_CONFIG")
     fi
 
     rpigo_info "Starting vsftpd."
