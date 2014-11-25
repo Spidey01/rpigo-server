@@ -1,7 +1,13 @@
 #!/bin/sh
 
-while getopts "o:kq:" opt; do
+while getopts "dro:kq:" opt; do
     case $opt in
+        d)
+            developer=true
+            ;;
+        r)
+            developer=false
+            ;;
         o)
             how="$OPTARG"
             ;;
@@ -22,7 +28,12 @@ shift `expr $OPTIND - 1`
 fifo_send() {
     local queue fifo
 
-    queue="${queue_here:-/tmp/rpigo.queue}"
+    if [ "$developer" = "true" ]; then
+        queue="${queue_here:-/tmp/rpigo.queue}"
+    else
+        queue="${queue_here:-/var/spool/rpigo/queue}"
+    fi
+
     fifo="${queue}/$(ls "$queue" | grep fifo | tail -n 1)"
 
     echo $* > $fifo
