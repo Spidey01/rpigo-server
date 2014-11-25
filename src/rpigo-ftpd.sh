@@ -27,7 +27,7 @@ fi
 . "${RPIGO_LIBDIR}/config.lib"
 . "${RPIGO_LIBDIR}/util.lib"
 
-rpigo_log_setup
+rpigo_log_setup ftpd
 
 # TODO: make sure RPIGO_CONFIGDIR is set.
 

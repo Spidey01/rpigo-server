@@ -104,7 +104,11 @@ done
 
 .  "${RPIGO_LIBDIR}/log.lib"
 
-rpigo_log_setup
+#
+# Setup a central log file before our per daemon logs are spawned.
+#
+rpigo_log_setup init
+
 rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 
 #

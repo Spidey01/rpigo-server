@@ -25,7 +25,7 @@ fi
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 
-rpigo_log_setup
+rpigo_log_setup authd
 
 handle_own_commands() {
     case "$1" in

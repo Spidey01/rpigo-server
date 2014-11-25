@@ -27,7 +27,7 @@ fi
 . "${RPIGO_LIBDIR}/config.lib"
 . "${RPIGO_LIBDIR}/apt.lib"
 
-rpigo_log_setup
+rpigo_log_setup packaged
 
 # TODO: make sure RPIGO_CONFIGDIR is set.
 

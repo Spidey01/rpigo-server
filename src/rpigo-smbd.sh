@@ -26,7 +26,7 @@ fi
 . "${RPIGO_LIBDIR}/util.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 
-rpigo_log_setup
+rpigo_log_setup smbd
 
 storage_root="${storage_root:-/media}"
 storage_sharename="storage"

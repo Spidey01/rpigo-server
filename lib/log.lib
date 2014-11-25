@@ -1,10 +1,27 @@
 # vim: set filetype=sh :
 
 
+#
+# Setup logging.
+#
+# If RPIGO_LOGDIR is set it will be initialized for use.
+# Any arguments will be setup in $RPIGO_LOGDIR with a suitable file extension.
+# All log file path names are exported as RPIGO_LOGFILES.
+#
 rpigo_log_setup() {
+    local basename logfile
+
     [ -d "$RPIGO_LOGDIR" ] || sudo -n mkdir -p "$RPIGO_LOGDIR"
     sudo -n chmod 0750 "$RPIGO_LOGDIR"
     sudo -n chown "${LOGNAME}:adm" "$RPIGO_LOGDIR"
+
+    for basename
+    do
+        logfile="${RPIGO_LOGDIR}/${basename}.log"
+        touch "$logfile"
+        RPIGO_LOGFILES="$RPIGO_LOGFILES $logfile"
+    done
+    export RPIGO_LOGFILES
 }
 
 
@@ -41,7 +58,7 @@ rpigo_log_message() {
             return 64 # EX_USAGE
     esac
 
-    echo "$(basename $0)/${level}(pid=$$, $(rpigo_log_timestamp)):" $* | tee -a "${RPIGO_LOGFILE:-/dev/null}" 1>&2
+    echo "$(basename $0)/${level}(pid=$$, $(rpigo_log_timestamp)):" $* | tee -a ${RPIGO_LOGFILES:-/dev/null} 1>&2
 }
 
 

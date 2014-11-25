@@ -26,7 +26,7 @@ fi
 . "${RPIGO_LIBDIR}/queue.lib"
 . "${RPIGO_LIBDIR}/config.lib"
 
-rpigo_log_setup
+rpigo_log_setup storaged
 
 
 #
