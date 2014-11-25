@@ -1,3 +1,4 @@
+# vim: set filetype=sh :
 #
 # FIFO based backend for authd.
 #

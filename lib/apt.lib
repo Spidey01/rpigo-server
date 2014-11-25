@@ -1,3 +1,4 @@
+# vim: set filetype=sh :
 #
 # apt.lib -- helper functions for apt-get and company.
 #

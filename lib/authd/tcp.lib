@@ -1,3 +1,4 @@
+# vim: set filetype=sh :
 #
 # Netcat based backend for authd.
 #

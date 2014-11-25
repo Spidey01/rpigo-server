@@ -1,3 +1,4 @@
+# vim: set filetype=sh :
 #
 # config.lib -- library for handling .conf files and such.
 #
