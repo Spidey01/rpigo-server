@@ -80,7 +80,7 @@ mount_device() {
         #
         # I'm just going to trust blkid to tell us the format. And warn if mkfs.that doesn't exist.
         #
-        volume_format="$(sudo -n blkid -o export "$new_device" | grep "TYPE" | cut -d '=' -f 2)"
+        volume_format="$(sudo -n blkid -o export -s TYPE "$new_device" | cut -d '=' -f 2)"
         type mkfs."${volume_format}" >/dev/null 2>/dev/null || rpigo_warn "$fn: mkfs.$volume_format doesn't exist."
 
         #
