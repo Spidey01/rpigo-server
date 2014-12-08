@@ -126,6 +126,22 @@ mount_device() {
     fi
 }
 
+#
+# Mount all them things!
+#
+mount_all() {
+    local device
+
+    rpigo_debug "${FUNCNAME[0]}(): searching /dev for allowed devices  missing in ${storage_root}."
+
+    for device in /dev/*; do
+        if is_allowed_device "$device"; then
+            mount | grep -q "^${device}" && continue # already mounted.
+            mount_device "$device"
+        fi
+    done
+}
+
 
 if ! config_eval "$my_config"; then
     rpigo_error "error parsing configuration file '${my_config}'."
@@ -153,6 +169,9 @@ do
                         rpigo_info "stopping process."
                         # self kill with childrens.
                         kill -- -$$
+                        ;;
+                    MOUNT\ ALL)
+                        mount_all
                         ;;
                     *)
                         rpigo_warn "TODO: handle command: $command ..."
