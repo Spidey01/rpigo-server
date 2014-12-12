@@ -132,6 +132,7 @@ daemonize "${RPIGO_BINDIR}/rpigo-powerd${SCRIPT_EXT}"
 daemonize "${RPIGO_BINDIR}/rpigo-storaged${SCRIPT_EXT}"
 
 daemonize "${RPIGO_BINDIR}/rpigo-serviced${SCRIPT_EXT}"
+daemonize "${RPIGO_BINDIR}/rpigo-dlnad${SCRIPT_EXT}"
 daemonize "${RPIGO_BINDIR}/rpigo-ftpd${SCRIPT_EXT}"
 daemonize "${RPIGO_BINDIR}/rpigo-smbd${SCRIPT_EXT}"
 # WIP

@@ -65,6 +65,11 @@ if ! installed vsftpd; then
     sudo update-rc.d vsftpd remove
 fi
 
+if ! installed minidlna; then
+    apt_install minidlna
+    sudo update-rc.d minidlna remove
+fi
+
 
 if ! installed inotifywait ; then
     apt_install inotify-tools
