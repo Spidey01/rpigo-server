@@ -19,6 +19,15 @@ while getopts "dro:kq:" opt; do
             ;;
         \?)
             echo "Invalid option: _$OPTARG" >&2
+            echo
+            echo "usage: $0 [options]"
+            echo
+            printf "\t-d     => developer mode\n" 
+            printf "\t-r     => release mode\n" 
+            printf "\t-o HOW => see rpigo-authd -o.\n" 
+            printf "\t-k     => kill after sending.\n" 
+            printf "\t-q     => override RPIGO_QUEUE.\n" 
+            echo
             exit $OPTERR
             ;;
     esac
