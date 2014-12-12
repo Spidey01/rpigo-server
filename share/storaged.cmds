@@ -2,3 +2,4 @@ rpigo-storaged STOP
 # mount all supported+missing devices under storage_root
 # like mount -a for storage_root.
 MOUNT ALL
+EJECT *

@@ -143,6 +143,34 @@ mount_all() {
 }
 
 
+#
+# Eject a specified disk from all mount points.
+#
+# Takes basename (e.g. sda1) as an argument.
+#
+eject() {
+    local fn device point
+
+    fn="${FUNCNAME[0]}()"
+
+    device="$1"
+
+
+    is_allowed_device "/dev/${device}" || {
+        rpigo_error "$fn: $device is not an allowed device."
+        return 64 # EX_USAGE
+    }
+
+    rpigo_info "ejecting '$device'"
+    for point in $(mount | awk "/^\/dev\/${device} on \// { print \$3 }")
+    do
+        rpigo_info "ejecting '$device': umount '$point'"
+        sudo umount "$point" || \
+            rpigo_error "problem unmounting '$device' from '$point'"
+    done
+}
+
+
 if ! config_eval "$my_config"; then
     rpigo_error "error parsing configuration file '${my_config}'."
 fi
@@ -172,6 +200,9 @@ do
                         ;;
                     MOUNT\ ALL)
                         mount_all
+                        ;;
+                    EJECT\ *)
+                        eject "$(echo "$command" | awk '{ print $2 }')"
                         ;;
                     *)
                         rpigo_warn "TODO: handle command: $command ..."
