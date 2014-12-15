@@ -77,7 +77,7 @@ do_status() {
 # Depend on lsb-base (>= 3.2-14) to ensure that this file is present
 # and status_of_proc is working.
 #
-[ -r /lib/lsb/init-function ]. /lib/lsb/init-functions
+[ -r /lib/lsb/init-function ] && . /lib/lsb/init-functions
 if ! type log_daemon_msg >/dev/null 2>/dev/null; then
     log_daemon_msg() {
         true
