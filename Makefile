@@ -95,12 +95,14 @@ help:
 install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(SUDOERS_FILE) /etc/init.d/rpigo
 	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
 
+# TODO: this should stop the daemon horde before hosing init scripts.
 uninstall:
 	rm -rf $(DOCDIR)
 	rm -rf $(SHAREDIR)
 	rm -rf $(LIBDIR)
 	rm -f $(SRC_FILES)
 	rm -f /etc/init.d/rpigo
+	update-rc.d -f rpigo remove
 
 purge: uninstall
 	rm -rf $(CONFIGDIR)
@@ -127,6 +129,7 @@ $(DOCDIR):
 	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' -e 's%RPIGO_BINDIR%$(BINDIR)%g' "$<" > "$@"
 	chmod 0755 $@
 	chown root:root $@
+	update-rc.d -f rpigo defaults
 
 # XXX should we use /bin/sh or /usr/sbin/nologin?
 useradd:
