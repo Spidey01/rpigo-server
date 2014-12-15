@@ -103,6 +103,7 @@ do
             case "$command" in
                 ${NAME}\ STOP)
                     [ -n $clean_up_needed ] && dlna_disable
+                    rpigo_info "stopping process."
                     exit 0
                     ;;
                 DLNA\ ENABLE)

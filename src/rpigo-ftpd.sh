@@ -114,6 +114,7 @@ do
                     # a file transfer? -- I expect leaking is more worry here.
                     #
                     ftpd_stop
+                    rpigo_info "stopping process."
                     exit 0
                     ;;
                 FTPD\ START)

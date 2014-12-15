@@ -151,3 +151,4 @@ daemonize "${RPIGO_BINDIR}/rpigo-smbd${SCRIPT_EXT}"
 
 rpigo_info "waiting on childrens."
 wait
+rpigo_info "Exiting process."
