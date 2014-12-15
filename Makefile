@@ -1,3 +1,4 @@
+# vim: set noexpandtab filetype=make :
 #
 # Written with GNU Make in mind.
 #
