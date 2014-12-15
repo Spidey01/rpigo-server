@@ -59,6 +59,11 @@ CONFIG_FILES = $(addprefix $(CONFIGDIR)/,$(notdir $(shell find config -maxdepth 
 DOC_FILES = $(DOCDIR)/README.md $(DOCDIR)/HACKING.md
 
 #
+# Various files to import into the OS.
+#
+OS_FILES = $(SUDOERS_FILE) /etc/init.d/rpigo /etc/logrotate.d/$(NAME)
+
+#
 # For setting up sudo.
 #
 RPIGO_USERNAME ?= $(NAME)
@@ -92,7 +97,7 @@ help:
 	@echo "will respect this variable."
 	@echo ""
 
-install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(SUDOERS_FILE) /etc/init.d/rpigo
+install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(OS_FILES)
 	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
 
 # TODO: this should stop the daemon horde before hosing init scripts.
@@ -101,7 +106,7 @@ uninstall:
 	rm -rf $(SHAREDIR)
 	rm -rf $(LIBDIR)
 	rm -f $(SRC_FILES)
-	rm -f /etc/init.d/rpigo
+	rm -f $(OS_FILES)
 	update-rc.d -f rpigo remove
 
 purge: uninstall
@@ -183,6 +188,8 @@ $(CONFIGDIR)/storage.config: config/storage.config
 	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' "$<" > "$@"
 	chmod 0644 $@
 	chown root:root $@
+/etc/logrotate.d/$(NAME): logrotate.conf
+	$(INSTALL_CONFIG) $< "$@"
 
 #
 # Install our Markdown files.
