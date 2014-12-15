@@ -14,7 +14,7 @@
 # limitations under the License.
 
 #
-# rpigo-init -- bootstrap the system from source or init scripts.
+# rpigo-init -- bootstrap the system from source or installed scripts.
 #
 
 # Source system defaults.

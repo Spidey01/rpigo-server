@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# powerd -- power management support daemon.
+#
 NAME=rpigo-powerd
 
 [ -r /etc/default/rpigo ] && . /etc/default/rpigo

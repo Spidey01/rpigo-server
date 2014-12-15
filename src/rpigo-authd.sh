@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# authd -- command authentication and dispatch daemon.
+#
 NAME=rpigo-authd
 
 [ -r /etc/default/rpigo ] && . /etc/default/rpigo

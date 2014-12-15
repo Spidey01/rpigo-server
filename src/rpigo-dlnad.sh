@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# dlnad -- Digital Living Network Appliance support daemon.
+#
 NAME=rpigo-dlnad
 
 [ -r /etc/default/rpigo ] && . /etc/default/rpigo
