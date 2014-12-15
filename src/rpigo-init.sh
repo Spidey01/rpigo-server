@@ -14,7 +14,7 @@
 # limitations under the License.
 
 #
-# rpigo-init -- bootstrap the system from source or installed scripts.
+# rpigo-init -- Daemon Horde Initializer
 #
 
 # Source system defaults.
