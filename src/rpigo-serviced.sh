@@ -22,9 +22,11 @@ if [ -z "$RPIGO_LIBDIR" ]; then
 fi
 
 
+. "${RPIGO_LIBDIR}/sudo.lib"
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 
+rpigo_sudo_setup
 rpigo_log_setup serviced
 
 get_arg() {
@@ -48,20 +50,20 @@ do
                     exit 0
                     ;;
                 SERVICE\ START\ *)
-                    #rpigo_debug "sudo -n service $(echo $command | cut -d' ' -f 3) start"
-                    sudo -n service $(get_arg $command) start
+                    #rpigo_debug "rpigo_sudo service $(echo $command | cut -d' ' -f 3) start"
+                    rpigo_sudo service $(get_arg $command) start
                     ;;
                 SERVICE\ STOP\ *)
-                    sudo -n service $(get_arg $command) stop
+                    rpigo_sudo service $(get_arg $command) stop
                     ;;
                 SERVICE\ RESTART\ *)
-                    sudo -n service $(get_arg $command) restart
+                    rpigo_sudo service $(get_arg $command) restart
                     ;;
                 SERVICE\ ENABLE\ *)
-                    rpigo_debug "sudo -n ... $(get_arg $command)"
+                    rpigo_debug "rpigo_sudo ... $(get_arg $command)"
                     ;;
                 SERVICE\ DISABLE\ *)
-                    rpigo_debug "sudo -n ... $(get_arg $command)"
+                    rpigo_debug "rpigo_sudo ... $(get_arg $command)"
                     ;;
                 *)
                     echo "handle command: $command ..."

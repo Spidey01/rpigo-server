@@ -22,11 +22,13 @@ if [ -z "$RPIGO_LIBDIR" ]; then
 fi
 
 
+. "${RPIGO_LIBDIR}/sudo.lib"
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 . "${RPIGO_LIBDIR}/config.lib"
 . "${RPIGO_LIBDIR}/util.lib"
 
+rpigo_sudo_setup
 rpigo_log_setup ftpd
 
 # TODO: make sure RPIGO_CONFIGDIR is set.

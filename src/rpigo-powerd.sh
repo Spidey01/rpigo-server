@@ -22,9 +22,11 @@ if [ -z "$RPIGO_LIBDIR" ]; then
 fi
 
 
+. "${RPIGO_LIBDIR}/sudo.lib"
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 
+rpigo_sudo_setup
 rpigo_log_setup powerd
 rpigo_queue_setup
 

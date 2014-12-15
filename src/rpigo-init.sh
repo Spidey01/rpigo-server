@@ -103,6 +103,13 @@ do
 done
 
 .  "${RPIGO_LIBDIR}/log.lib"
+.  "${RPIGO_LIBDIR}/sudo.lib"
+
+#
+# Oh magical sudo, we assume thy configuration is sane.
+# Or die here ASAP.
+#
+rpigo_sudo_setup
 
 #
 # Setup a central log file before our per daemon logs are spawned.
@@ -110,6 +117,10 @@ done
 rpigo_log_setup init
 
 rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
+
+
+[ ! -d "$RPIGO_RUNDIR" ] && rpigo_debug "mkdir $RPIGO_RUNDIR" && rpigo_sudo mkdir "$RPIGO_RUNDIR"
+echo $$ > "${RPIGO_RUNDIR}/init.pid"
 
 #
 # usage: daemonize prog [arg ....]

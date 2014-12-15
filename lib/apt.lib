@@ -3,6 +3,7 @@
 # apt.lib -- helper functions for apt-get and company.
 #
 
+
 apt_get_packages() {
     local fn line
 
@@ -22,22 +23,22 @@ apt_get_packages() {
 
 
 apt_install() {
-    echo sudo -n apt-get install --dry-run -y "$1"
+    echo rpigo_sudo apt-get install --dry-run -y "$1"
 }
 
 
 apt_remove() {
-    echo sudo -n apt-get remove --dry-run -y "$1"
+    echo rpigo_sudo apt-get remove --dry-run -y "$1"
     # or do we want to 'purge' or 'remove' then 'autoremove' ?
 }
 
 
 apt_update() {
-    sudo -n apt-get update
+    rpigo_sudo apt-get update
 }
 
 
 apt_upgrade() {
-    echo sudo -n apt-get upgrade --dry-run -y "$1"
+    echo rpigo_sudo apt-get upgrade --dry-run -y "$1"
 }
 

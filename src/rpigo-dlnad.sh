@@ -22,11 +22,13 @@ if [ -z "$RPIGO_LIBDIR" ]; then
 fi
 
 
+. "${RPIGO_LIBDIR}/sudo.lib"
 . "${RPIGO_LIBDIR}/config.lib"
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 . "${RPIGO_LIBDIR}/util.lib"
 
+rpigo_sudo_setup
 rpigo_log_setup dlnad
 rpigo_warn "minidlna 1.0.24 was rejecting -f config syntax as of 2014-12-12. YMMV."
 

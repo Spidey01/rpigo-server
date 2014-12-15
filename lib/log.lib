@@ -11,9 +11,9 @@
 rpigo_log_setup() {
     local basename logfile
 
-    [ -d "$RPIGO_LOGDIR" ] || sudo -n mkdir -p "$RPIGO_LOGDIR"
-    sudo -n chmod 0750 "$RPIGO_LOGDIR"
-    sudo -n chown "${LOGNAME}:adm" "$RPIGO_LOGDIR"
+    [ -d "$RPIGO_LOGDIR" ] || rpigo_sudo mkdir -p "$RPIGO_LOGDIR"
+    rpigo_sudo chmod 0750 "$RPIGO_LOGDIR"
+    rpigo_sudo chown "${LOGNAME}:adm" "$RPIGO_LOGDIR"
 
     for basename
     do
