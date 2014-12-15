@@ -52,7 +52,7 @@ SRC_FILES = $(addprefix $(BINDIR)/,$(basename $(shell ls src)))
 CONFIG_FILES = $(addprefix $(CONFIGDIR)/,$(notdir $(shell find config -maxdepth 1 -type f -print))) \
                $(addprefix $(CONFIGDIR)/packages.d/,$(shell ls config/packages.d)) \
 
-DOC_FILES = $(DOCDIR)/README.md $(DOCDIR)/HACKING.md
+DOC_FILES = $(DOCDIR)/README.md $(DOCDIR)/HACKING.md $(DOCDIR)/INSTALL.md
 
 #
 # Various files to import into the OS.
