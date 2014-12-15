@@ -92,7 +92,7 @@ help:
 	@echo "will respect this variable."
 	@echo ""
 
-install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(SUDOERS_FILE)
+install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(SUDOERS_FILE) /etc/init.d/rpigo
 	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
 
 uninstall:
@@ -100,6 +100,7 @@ uninstall:
 	rm -rf $(SHAREDIR)
 	rm -rf $(LIBDIR)
 	rm -f $(SRC_FILES)
+	rm -f /etc/init.d/rpigo
 
 purge: uninstall
 	rm -rf $(CONFIGDIR)
@@ -120,6 +121,12 @@ $(CONFIGDIR):
 
 $(DOCDIR):
 	$(MKDIR_P) "$@"
+
+# note: probably not gonna work without GNU sed.
+/etc/init.d/rpigo: init/rpigo
+	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' -e 's%RPIGO_BINDIR%$(BINDIR)%g' "$<" > "$@"
+	chmod 0755 $@
+	chown root:root $@
 
 # XXX should we use /bin/sh or /usr/sbin/nologin?
 useradd:
