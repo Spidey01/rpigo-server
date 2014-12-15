@@ -54,6 +54,8 @@ CONFIG_FILES = $(addprefix $(CONFIGDIR)/,$(notdir $(shell find config -maxdepth 
 
 DOC_FILES = $(DOCDIR)/README.md $(DOCDIR)/HACKING.md $(DOCDIR)/INSTALL.md
 
+VERSION_FILES = $(CONFIGDIR)/commit $(CONFIGDIR)/version
+
 #
 # Various files to import into the OS.
 #
@@ -93,7 +95,7 @@ help:
 	@echo "will respect this variable."
 	@echo ""
 
-install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(OS_FILES)
+install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(OS_FILES) $(VERSION_FILES)
 	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
 
 # TODO: this should stop the daemon horde before hosing init scripts.
@@ -109,7 +111,7 @@ purge: uninstall
 	rm -rf $(CONFIGDIR)
 	rm -f $(SUDOERS_FILE)
 
-.PHONY: install uninstall purge useradd userdel
+.PHONY: install uninstall purge useradd userdel $(VERSION_FILES)
 
 $(SHAREDIR):
 	$(MKDIR_P) "$@"
@@ -144,6 +146,19 @@ $(SUDOERS_FILE): $(SUDOERS_TEMPLATE)
 	chown 0:0 $@
 	chmod 0440 $@
 
+#
+# Version files from git.
+#
+
+# could probably pull this from tracing .git/HEAD but meh
+$(CONFIGDIR)/commit:
+	if git status | grep -q modified: ; \
+		then echo "$$(git log --oneline | head -n 1 | cut -d' ' -f 1)_modified" > "$@" ; \
+		else git log --oneline | head -n 1 | cut -d' ' -f 1 > "$@" ; \
+		fi
+
+$(CONFIGDIR)/version:
+	if [ "$$(git tag | wc -l)" -gt 0 ]; then git describe --tags HEAD > "$@"; fi
 
 #
 # Pattern rules.
