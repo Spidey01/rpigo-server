@@ -18,13 +18,6 @@
 # util.lib -- duh!
 #
 
-# Prints the serial number for this device.
-#
-# This only works for the raspberry pi at the moment. Not PCs.
-#
-get_serial_number() {
-    grep Serial /proc/cpuinfo  | awk '{ print $3 }'
-}
 
 # Filter that strips leading zeros.
 #
@@ -56,9 +49,46 @@ strip_zeros() {
     sed -e "s/${pattern}//"
 }
 
-# Prints a name like 'rpiNNNNN'
+
+# Prints the serial number for this device.
+#
+# If /proc/cpuinfo contains the field "Serial" it will be used. This should
+# work on the Raspberry Pi and a number of ARM boards but not on PCs.
+#
+# If that is not present but dmidecode is in path: attempt to print the 
+# system-serial-number from the DMI/SMBIOS table.
+#
+# Otherwise returns 'unknown'.
+#
+rpigo_serial() {
+    if grep -q Serial /proc/cpuinfo; then
+        grep Serial /proc/cpuinfo  | awk '{ print $3 }'
+    elif type dmidecode >/dev/null 2>&1; then
+        dmidecode --string system-serial-number
+    else
+        echo unknown
+    fi
+}
+
+
+rpigo_hostname() {
+    hostname $*
+}
+
+
+# Prints a friendly unit name.
+#
+# This is either found in name.conf or generated from the serial number.
 #
 rpigo_unitname() {
-    echo "rpi$(get_serial_number | strip_zeros)"
+    local namefile
+
+    namefile="${RPIGO_CONFIGDIR}/name.conf"
+
+    if [ -f "$namefile" ]; then
+        cat "$namefile"
+    else
+        echo "rpi$(rpigo_serial | strip_zeros)"
+    fi
 }
 

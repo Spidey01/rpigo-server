@@ -68,7 +68,7 @@ dlna_enable() {
     echo sudo -n start-stop-daemon --start --pidfile "${minidlna_pidfile}" \
         --exec /usr/bin/minidlna -- \
             -f "${my_config}" -P "${minidlna_pidfile}" \
-            -s "$(get_serial_number)"
+            -s "$(rpigo_serial)"
     # Should we report a -m "model number" ???
 
     #if [ $? -eq 0 ]; then
