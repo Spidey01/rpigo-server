@@ -126,11 +126,11 @@ $(DOCDIR):
 	$(MKDIR_P) "$@"
 
 # note: probably not gonna work without GNU sed.
-$(ETCDIR)/init.d/$(NAME): init/rpigo
+$(ETCDIR)/init.d/$(NAME): init/$(NAME)
 	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' -e 's%RPIGO_BINDIR%$(BINDIR)%g' "$<" > "$@"
 	chmod 0755 $@
 	chown root:root $@
-	update-rc.d -f rpigo defaults
+	update-rc.d rpigo defaults
 
 # XXX should we use /bin/sh or /usr/sbin/nologin?
 useradd:
