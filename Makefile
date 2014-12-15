@@ -24,17 +24,13 @@ PREFIX ?= /usr/local
 
 NAME = rpigo
 #
-# where we expect stuff in ./share to install to.
+# where we expect stuff to install to.
 #
 SHAREDIR = $(DESTDIR)$(PREFIX)/share/$(NAME)
 LIBDIR = $(DESTDIR)$(PREFIX)/lib/$(NAME)
 BINDIR = $(DESTDIR)$(PREFIX)/bin
-#
-# XXX
-# How to handle this? Some systems have /usr/local/etc; most do not.
-# Probably should use $(DESTDIR)/etc/xdg/$(NAME) for this.
-#
-CONFIGDIR = $(DESTDIR)/etc/xdg/$(NAME)
+ETCDIR = $(DESTDIR)/etc
+CONFIGDIR = $(ETCDIR)/xdg/$(NAME)
 DOCDIR = $(DESTDIR)$(PREFIX)/share/doc/$(NAME)
 
 #
@@ -61,14 +57,14 @@ DOC_FILES = $(DOCDIR)/README.md $(DOCDIR)/HACKING.md
 #
 # Various files to import into the OS.
 #
-OS_FILES = $(SUDOERS_FILE) /etc/init.d/rpigo /etc/logrotate.d/$(NAME)
+OS_FILES = $(SUDOERS_FILE) $(ETCDIR)/init.d/$(NAME) $(ETCDIR)/logrotate.d/$(NAME)
 
 #
 # For setting up sudo.
 #
 RPIGO_USERNAME ?= $(NAME)
 SUDOERS_TEMPLATE = sudoers
-SUDOERS_FILE = $(DESTDIR)/etc/sudoers.d/rpigo
+SUDOERS_FILE = $(ETCDIR)/sudoers.d/$(NAME)
 
 #
 # Command macros.
@@ -130,7 +126,7 @@ $(DOCDIR):
 	$(MKDIR_P) "$@"
 
 # note: probably not gonna work without GNU sed.
-/etc/init.d/rpigo: init/rpigo
+$(ETCDIR)/init.d/$(NAME): init/rpigo
 	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' -e 's%RPIGO_BINDIR%$(BINDIR)%g' "$<" > "$@"
 	chmod 0755 $@
 	chown root:root $@
@@ -188,7 +184,7 @@ $(CONFIGDIR)/storage.config: config/storage.config
 	sed -e 's/RPIGO_USERNAME/$(RPIGO_USERNAME)/g' "$<" > "$@"
 	chmod 0644 $@
 	chown root:root $@
-/etc/logrotate.d/$(NAME): logrotate.conf
+$(ETCDIR)/logrotate.d/$(NAME): logrotate.conf
 	$(INSTALL_CONFIG) $< "$@"
 
 #
