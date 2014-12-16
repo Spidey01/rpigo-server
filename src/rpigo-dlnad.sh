@@ -58,14 +58,14 @@ dlna_enable() {
 
     name="$(rpigo_unitname)"
 
-    [ ! -d "$RPIGO_RUNDIR" ] && rpigo_debug "mkdir $RPIGO_RUNDIR" && sudo -n mkdir "$RPIGO_RUNDIR"
+    [ ! -d "$RPIGO_RUNDIR" ] && rpigo_debug "mkdir $RPIGO_RUNDIR" && rpigo_sudo mkdir "$RPIGO_RUNDIR"
 
     rpigo_info "Starting minidlna."
     #
     # Note: this will --chdir / by default. So file paths have to be absolute
     #       paths or relative to /, not the CWD of this script.
     #
-    echo sudo -n start-stop-daemon --start --pidfile "${minidlna_pidfile}" \
+    echo rpigo_sudo start-stop-daemon --start --pidfile "${minidlna_pidfile}" \
         --exec /usr/bin/minidlna -- \
             -f "${my_config}" -P "${minidlna_pidfile}" \
             -s "$(rpigo_serial)"
@@ -78,8 +78,8 @@ dlna_enable() {
 
 dlna_disable() {
     rpigo_info "Stopping minidlna."
-    sudo -n start-stop-daemon --stop --pidfile "${minidlna_pidfile}" --name minidlna
-    sudo -n rm -f "${minidlna_pidfile}"
+    rpigo_sudo start-stop-daemon --stop --pidfile "${minidlna_pidfile}" --name minidlna
+    rpigo_sudo rm -f "${minidlna_pidfile}"
 }
 
 
