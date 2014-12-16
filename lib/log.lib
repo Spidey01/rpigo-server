@@ -30,7 +30,7 @@ rpigo_log_setup() {
 
     [ -d "$RPIGO_LOGDIR" ] || rpigo_sudo mkdir -p "$RPIGO_LOGDIR"
     rpigo_sudo chmod 0750 "$RPIGO_LOGDIR"
-    rpigo_sudo chown "${LOGNAME}:adm" "$RPIGO_LOGDIR"
+    rpigo_sudo chown "$(id -u):adm" "$RPIGO_LOGDIR"
 
     for basename
     do

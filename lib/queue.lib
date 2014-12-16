@@ -36,7 +36,7 @@ rpigo_queue_setup() {
         RPIGO_QUEUE="${RPIGO_SPOOLDIR}/queue"
         if [ ! -d "$RPIGO_QUEUE" ]; then
             rpigo_sudo mkdir -m 0700 -p "$RPIGO_QUEUE"
-            rpigo_sudo chown "$LOGNAME" "$RPIGO_QUEUE"
+            rpigo_sudo chown "$(id -u)" "$RPIGO_QUEUE"
         fi
     else
         rpigo_debug "$fn: Using \$1=$1."
