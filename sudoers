@@ -1,12 +1,15 @@
+# vim: set noexpandtab :
 RPIGO_USERNAME ALL=(root) NOPASSWD: \
 	/bin/chmod, \
 	/bin/chown, \
 	/bin/mkdir, \
 	/bin/mount, \
+	/bin/rm, \
 	/bin/umount, \
 	/sbin/blkid, \
 	/sbin/reboot, \
 	/sbin/shutdown, \
+	/sbin/start-stop-daemon, \
 	/usr/bin/avahi-publish-service, \
 	/usr/sbin/service, \
 	/usr/sbin/update-rc.d, \
