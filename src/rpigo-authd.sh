@@ -25,6 +25,7 @@ if [ -z "$RPIGO_LIBDIR" ]; then
 fi
 
 
+. "${RPIGO_LIBDIR}/sudo.lib"
 . "${RPIGO_LIBDIR}/log.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 
