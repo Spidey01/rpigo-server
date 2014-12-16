@@ -35,6 +35,7 @@ rpigo_sudo_setup() {
 
 rpigo_sudo() {
     [ "$RPIGO_SUDO_SETUP" != "true" ] && rpigo_sudo_setup
+    rpigo_trace sudo -n $*
     sudo -n $*
 }
 
