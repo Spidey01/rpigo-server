@@ -18,6 +18,10 @@
 # config.lib -- library for handling .conf files and such.
 #
 
+[ -z "$RPIGO_LIB_CONFIG_INCLUDED" ] || return 0
+RPIGO_LIB_CONFIG_INCLUDED=included
+
+. "${RPIGO_LIBDIR}/log.lib"
 
 #
 # Parse config and evaluate as environment variables.

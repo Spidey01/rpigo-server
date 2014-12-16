@@ -17,6 +17,10 @@
 # log.lib -- logging support, d'uh!
 #
 
+[ -z "$RPIGO_LIB_LOG_INCLUDED" ] || return 0
+RPIGO_LIB_LOG_INCLUDED=included
+
+. "${RPIGO_LIBDIR}/sudo.lib"
 
 #
 # Setup logging.

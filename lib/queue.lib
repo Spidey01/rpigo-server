@@ -17,6 +17,12 @@
 # queue.lib -- a simple message queue for shell.
 #
 
+[ -z "$RPIGO_LIB_QUEUE_INCLUDED" ] || return 0
+RPIGO_LIB_QUEUE_INCLUDED=included
+
+. "${RPIGO_LIBDIR}/log.lib"
+. "${RPIGO_LIBDIR}/sudo.lib"
+
 #
 # Setup the queue and export RPIGO_QUEUE for subprocesses to use.
 # Only call this from the startup program.

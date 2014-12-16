@@ -18,6 +18,8 @@
 # util.lib -- duh!
 #
 
+[ -z "$RPIGO_LIB_UTIL_INCLUDED" ] || return 0
+RPIGO_LIB_UTIL_INCLUDED=included
 
 # Filter that strips leading zeros.
 #

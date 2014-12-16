@@ -17,6 +17,11 @@
 # sudo.lib -- wrapper functions for sudo.
 #
 
+[ -z "$RPIGO_LIB_SUDO_INCLUDED" ] || return 0
+RPIGO_LIB_SUDO_INCLUDED=included
+
+. "${RPIGO_LIBDIR}/log.lib"
+
 RPIGO_SUDO_SETUP=false
 
 rpigo_sudo_setup() {

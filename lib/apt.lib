@@ -18,6 +18,12 @@
 # apt.lib -- helper functions for apt-get and company.
 #
 
+[ -z "$RPIGO_LIB_APT_INCLUDED" ] || return 0
+RPIGO_LIB_APT_INCLUDED=included
+
+. "${RPIGO_LIBDIR}/log.lib"
+. "${RPIGO_LIBDIR}/sudo.lib"
+
 
 apt_get_packages() {
     local fn line
