@@ -138,9 +138,9 @@ do
     #
 
     # by modification time
-    #last_message_number=$(ls -t ${RPIGO_QUEUE}/${to_daemon}.[0-9]* | sort -V | tail -n 1 | xargs basename | cut -d. -f 2 2>/dev/null)
+    #last_message_number=$(ls -t ${RPIGO_QUEUE}/${to_daemon}.[0-9]* 2>/dev/null | sort -V | tail -n 1 | xargs basename 2>/dev/null | cut -d. -f 2)
     # by name
-    last_message_number=$(ls ${RPIGO_QUEUE}/${to_daemon}.[0-9]* | sort -V | tail -n 1 | xargs basename | cut -d. -f 2 2>/dev/null)
+    last_message_number=$(ls ${RPIGO_QUEUE}/${to_daemon}.[0-9]* 2> /dev/null | sort -V | tail -n 1 | xargs basename 2>/dev/null | cut -d. -f 2)
 
     [ -z $last_message_number ] && last_message_number=-1
 
