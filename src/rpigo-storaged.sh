@@ -37,10 +37,9 @@ rpigo_log_setup storaged
 my_config="${RPIGO_CONFIGDIR}/storage.conf"
 
 #
-# Default location to mount media if not specified in the $my_config or
-# /etc/defaults/rpigo files.
+# Default location to mount media if not specified in the $my_config.
 #
-storage_root="${storage_root:-/media}"
+storage_root="/media"
 
 #
 # Default uid/gid of mount points if not specified in $my_config.

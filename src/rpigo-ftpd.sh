@@ -40,10 +40,9 @@ MY_CONFIG="${RPIGO_CONFIGDIR}/ftp.conf"
 vsftpd_pidfile="${RPIGO_RUNDIR}/vsftpd.pid"
 avahi_pid=
 
-# Default location to mount media if not specified in the
-# $RPIGO_CONFIGDIR/storage.conf or # /etc/defaults/rpigo files.
+# Default location root if not specified in the $MY_CONFIG.
 #
-storage_root="${storage_root:-/media}"
+storage_root="/media"
 
 ftpd_start() {
     local ftp_port

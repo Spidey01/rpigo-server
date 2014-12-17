@@ -42,10 +42,9 @@ my_config="${RPIGO_CONFIGDIR}/minidlna.conf"
 storage_config="${RPIGO_CONFIGDIR}/storage.conf"
 
 #
-# Default location to mount media if not specified in the $storage_config or
-# /etc/defaults/rpigo files.
+# Default location to find media if not specified in the $storage_config.
 #
-storage_root="${storage_root:-/media}"
+storage_root="/media"
 
 
 clean_up_needed=

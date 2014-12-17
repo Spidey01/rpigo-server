@@ -30,7 +30,7 @@ fi
 rpigo_sudo_setup
 rpigo_log_setup smbd
 
-storage_root="${storage_root:-/media}"
+storage_root="/media"
 storage_sharename="storage"
 
 clean_up_needed=
