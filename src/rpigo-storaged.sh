@@ -42,6 +42,12 @@ my_config="${RPIGO_CONFIGDIR}/storage.conf"
 #
 storage_root="${storage_root:-/media}"
 
+#
+# Default uid/gid of mount points if not specified in $my_config.
+#
+storage_mount_uid="$(id -u)"
+storage_mount_gid="$(id -g)"
+
 
 is_allowed_device() {
     echo "$1" | grep -q -E '/dev/sd[a-z]+[0-9]+$'
@@ -88,8 +94,8 @@ mount_device() {
         #
         # these mount options have dynamic defaults if not in the config.
         #
-        [ -z "$storage_mount_vfat_uid" ] && storage_mount_vfat_uid=$(id -u)
-        [ -z "$storage_mount_vfat_gid" ] && storage_mount_vfat_gid=$(id -g)
+        [ -z "$storage_mount_vfat_uid" ] && storage_mount_vfat_uid=$storage_mount_uid
+        [ -z "$storage_mount_vfat_gid" ] && storage_mount_vfat_gid=$storage_mount_gid
 
         #
         # Handle mount options.
@@ -114,17 +120,18 @@ mount_device() {
         mount_point="${storage_root}/${volume_name}"
         rpigo_info "mount point for \"$new_device\" is \"$mount_point\""
         rpigo_sudo mkdir -m 0700 -p "$mount_point" && rpigo_info "created mount point $mount_point"
-        rpigo_sudo chown "${storage_mount_uid}:${storage_mount_gid}" "$mount_point"
 
         mount_command="rpigo_sudo mount -t \"$volume_format\" $volume_options $storage_mount_options \"$new_device\" \"$mount_point\""
 
         rpigo_debug "mount command => '$mount_command'"
 
-        #if ! rpigo_sudo mount -t "$volume_format" $volume_options $storage_mount_options "$new_device" "$mount_point"
         if ! eval $mount_command
         then
             rpigo_error "Looks like mounting '$new_device' on '$mount_point' failed."
         fi
+
+        # ensure ext mount points get correct permissions.
+        rpigo_sudo chown "${storage_mount_uid}:${storage_mount_gid}" "$mount_point"
     fi
 }
 
