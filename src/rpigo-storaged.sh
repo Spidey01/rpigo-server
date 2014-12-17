@@ -74,7 +74,7 @@ mount_device() {
             rpigo_error "$fn: unsupported storage_name_format=${storage_name_format}."
             continue
         fi
-        volume_name="$(sudo -n blkid -o export "$new_device" | grep "$storage_name_format" | cut -d '=' -f 2)"
+        volume_name="$(rpigo_sudo blkid -o export "$new_device" | grep "$storage_name_format" | cut -d '=' -f 2)"
 
         # fail safe in case storage_name_format=LABEL and there is no label.
         [ -z "$volume_name" ] && volume_name="$(basename "$new_device")"
@@ -82,7 +82,7 @@ mount_device() {
         #
         # I'm just going to trust blkid to tell us the format. And warn if mkfs.that doesn't exist.
         #
-        volume_format="$(sudo -n blkid -o export -s TYPE "$new_device" | cut -d '=' -f 2)"
+        volume_format="$(rpigo_sudo blkid -o export -s TYPE "$new_device" | cut -d '=' -f 2)"
         type mkfs."${volume_format}" >/dev/null 2>/dev/null || rpigo_warn "$fn: mkfs.$volume_format doesn't exist."
 
         #
@@ -113,14 +113,14 @@ mount_device() {
         #
         mount_point="${storage_root}/${volume_name}"
         rpigo_info "mount point for \"$new_device\" is \"$mount_point\""
-        sudo -n mkdir -m 0700 -p "$mount_point" && rpigo_info "created mount point $mount_point"
-        sudo -n chown "${storage_mount_uid}:${storage_mount_gid}" "$mount_point"
+        rpigo_sudo mkdir -m 0700 -p "$mount_point" && rpigo_info "created mount point $mount_point"
+        rpigo_sudo chown "${storage_mount_uid}:${storage_mount_gid}" "$mount_point"
 
-        mount_command="sudo -n mount -t \"$volume_format\" $volume_options $storage_mount_options \"$new_device\" \"$mount_point\""
+        mount_command="rpigo_sudo mount -t \"$volume_format\" $volume_options $storage_mount_options \"$new_device\" \"$mount_point\""
 
         rpigo_debug "mount command => '$mount_command'"
 
-        #if ! sudo -n mount -t "$volume_format" $volume_options $storage_mount_options "$new_device" "$mount_point"
+        #if ! rpigo_sudo mount -t "$volume_format" $volume_options $storage_mount_options "$new_device" "$mount_point"
         if ! eval $mount_command
         then
             rpigo_error "Looks like mounting '$new_device' on '$mount_point' failed."
