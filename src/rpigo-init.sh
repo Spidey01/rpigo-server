@@ -23,7 +23,7 @@
 #
 # usage: rpigo-init.sh [options]
 #
-while getopts "dv" opt; do
+while getopts "dvL:" opt; do
     case $opt in
         d)
             # enable developer mode.
@@ -32,6 +32,9 @@ while getopts "dv" opt; do
         v)
             # max logging.
             export RPIGO_LOGLEVEL=999
+            ;;
+        L)
+            export RPIGO_LOGLEVEL="$OPTARG"
             ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
