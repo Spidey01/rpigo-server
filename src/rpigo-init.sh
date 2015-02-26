@@ -107,6 +107,7 @@ done
 
 .  "${RPIGO_LIBDIR}/log.lib"
 .  "${RPIGO_LIBDIR}/sudo.lib"
+.  "${RPIGO_LIBDIR}/queue.lib"
 
 #
 # Oh magical sudo, we assume thy configuration is sane.
@@ -125,6 +126,10 @@ rpigo_debug "RPIGO_DEVELOPER='$RPIGO_DEVELOPER'"
 [ ! -d "$RPIGO_RUNDIR" ] && rpigo_debug "mkdir $RPIGO_RUNDIR" && rpigo_sudo mkdir "$RPIGO_RUNDIR"
 echo $$ > "${RPIGO_RUNDIR}/init.pid"
 
+# Needed so stopall() can access the queue.
+rpigo_queue_setup
+
+
 #
 # usage: daemonize prog [arg ....]
 #
@@ -136,22 +141,63 @@ daemonize() {
     setsid $* < /dev/null &
 }
 
-daemonize "${RPIGO_BINDIR}/rpigo-authd${SCRIPT_EXT}" -o fifo
+startall() {
+    rpigo_debug "startall()"
 
-# WIP
-#daemonize "${RPIGO_BINDIR}/rpigo-networkd${SCRIPT_EXT}"
+    daemonize "${RPIGO_BINDIR}/rpigo-authd${SCRIPT_EXT}" -o fifo
 
-daemonize "${RPIGO_BINDIR}/rpigo-packaged${SCRIPT_EXT}"
-daemonize "${RPIGO_BINDIR}/rpigo-powerd${SCRIPT_EXT}"
-daemonize "${RPIGO_BINDIR}/rpigo-storaged${SCRIPT_EXT}"
+    # WIP
+    #daemonize "${RPIGO_BINDIR}/rpigo-networkd${SCRIPT_EXT}"
 
-daemonize "${RPIGO_BINDIR}/rpigo-serviced${SCRIPT_EXT}"
-daemonize "${RPIGO_BINDIR}/rpigo-dlnad${SCRIPT_EXT}"
-daemonize "${RPIGO_BINDIR}/rpigo-ftpd${SCRIPT_EXT}"
-daemonize "${RPIGO_BINDIR}/rpigo-smbd${SCRIPT_EXT}"
-# WIP
-#daemonize "${RPIGO_BINDIR}/rpigo-printerd${SCRIPT_EXT}"
+    daemonize "${RPIGO_BINDIR}/rpigo-packaged${SCRIPT_EXT}"
+    daemonize "${RPIGO_BINDIR}/rpigo-powerd${SCRIPT_EXT}"
+    daemonize "${RPIGO_BINDIR}/rpigo-storaged${SCRIPT_EXT}"
+
+    daemonize "${RPIGO_BINDIR}/rpigo-serviced${SCRIPT_EXT}"
+    daemonize "${RPIGO_BINDIR}/rpigo-dlnad${SCRIPT_EXT}"
+    daemonize "${RPIGO_BINDIR}/rpigo-ftpd${SCRIPT_EXT}"
+    daemonize "${RPIGO_BINDIR}/rpigo-smbd${SCRIPT_EXT}"
+    # WIP
+    #daemonize "${RPIGO_BINDIR}/rpigo-printerd${SCRIPT_EXT}"
+}
+
+stopall() {
+    local daemon
+
+    rpigo_debug "stopall()"
+
+    for daemon in \
+        rpigo-packaged \
+        rpigo-powerd \
+        rpigo-storaged \
+        rpigo-serviced \
+        rpigo-dlnad \
+        rpigo-ftpd \
+        rpigo-smbd \
+        rpigo-authd
+    do
+        #
+        # Inject STOP command
+        #
+        rpigo_info "Sending '$daemon STOP' to authd."
+        echo $daemon STOP > "${RPIGO_QUEUE}/$(ls "$RPIGO_QUEUE" | grep fifo | tail -n 1)"
+    done
+
+    #
+    # Is it safe to do this in a SIGTERM handler?
+    #
+    rpigo_debug "SIGTERM handler: waiting on childrens."
+    wait
+    rpigo_debug "SIGTERM handler: DONE."
+}
+
+#
+# Setup a trap to stop childrens on SIGTERM.
+#
+trap stopall TERM
+startall
 
 rpigo_info "waiting on childrens."
 wait
 rpigo_info "Exiting process."
+

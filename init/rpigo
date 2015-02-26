@@ -37,9 +37,11 @@ do_start() {
 
 
 do_stop() {
-    #start-stop-daemon --stop --pidfile "$PIDFILE" --name $DAEMON
-    echo "TODO: proper shutdown."
-    exit 2
+    #
+    # Send SIGTERM to the rpigo-init process so that it will bring
+    # down the daemon horde accordingly.
+    #
+    kill -s TERM $(ps -u "$DAEMON_USER" -f | grep "$DAEMON" | awk '{ print $2}')
 }
 
 
