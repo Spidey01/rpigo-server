@@ -77,7 +77,7 @@ rpigo_queue_wait() {
 # How COMMAND will be processed if at all is up to DAEMON to work through.
 #
 rpigo_queue_send() {
-    local to_daemon command last_message_number message_file
+    local to_daemon command message_file
 
     to_daemon="$1"
     shift
@@ -86,16 +86,13 @@ rpigo_queue_send() {
     #
     # Calculate some valid name for message_file.
     # We are the ONLY function who creates these.
+    # Daemons look for '{name}.*' files showing up in the queue.
+    #
+    # In <= v0.5 this was done in rpigo-authd and used a sequential integer.
+    # In v0.6 this function was created.  We now use the process ID and a timestamp.
     #
 
-    # by modification time
-    #last_message_number=$(ls -t ${RPIGO_QUEUE}/${to_daemon}.[0-9]* 2>/dev/null | sort -V | tail -n 1 | xargs basename 2>/dev/null | cut -d. -f 2)
-    # by name
-    last_message_number=$(ls ${RPIGO_QUEUE}/${to_daemon}.[0-9]* 2> /dev/null | sort -V | tail -n 1 | xargs basename 2>/dev/null | cut -d. -f 2)
-
-    [ -z $last_message_number ] && last_message_number=-1
-
-    message_file="${RPIGO_QUEUE}/${to_daemon}.$(expr $last_message_number + 1)"
+    message_file="${RPIGO_QUEUE}/${to_daemon}.$$.$(date "+%Y-%m-%d.%Z.%H%M.%N")"
     
     rpigo_debug "message_file will be: $message_file"
     rpigo_debug "COMMAND will be: $command"
