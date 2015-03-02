@@ -132,25 +132,7 @@ do
         continue
     fi
 
-    #
-    # Calculate some valid name for message_file.
-    # We are the ONLY program who creates these.
-    #
-
-    # by modification time
-    #last_message_number=$(ls -t ${RPIGO_QUEUE}/${to_daemon}.[0-9]* 2>/dev/null | sort -V | tail -n 1 | xargs basename 2>/dev/null | cut -d. -f 2)
-    # by name
-    last_message_number=$(ls ${RPIGO_QUEUE}/${to_daemon}.[0-9]* 2> /dev/null | sort -V | tail -n 1 | xargs basename 2>/dev/null | cut -d. -f 2)
-
-    [ -z $last_message_number ] && last_message_number=-1
-
-    message_file="${RPIGO_QUEUE}/${to_daemon}.$(expr $last_message_number + 1)"
-    
-    rpigo_debug "message_file will be: $message_file"
-    rpigo_debug "COMMAND will be: $COMMAND"
-
-    echo "$COMMAND" > $message_file
-    #rpigo_debug "rm -f => $message_file"
+    rpigo_queue_send "$to_daemon" $COMMAND
 done
 
 $command_teardown

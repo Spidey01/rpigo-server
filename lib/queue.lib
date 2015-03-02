@@ -70,3 +70,38 @@ rpigo_queue_wait() {
 }
 
 
+# rpigo_queue_send DAEMON COMMAND...
+#
+# Send COMMAND to the specified DAEMON. Anything after COMMAND will be sent as words.
+# DAEMON must be monitoring the queue, e.g. using rpigo_queue_wait().
+# How COMMAND will be processed if at all is up to DAEMON to work through.
+#
+rpigo_queue_send() {
+    local to_daemon command last_message_number message_file
+
+    to_daemon="$1"
+    shift
+    command="$*"
+
+    #
+    # Calculate some valid name for message_file.
+    # We are the ONLY function who creates these.
+    #
+
+    # by modification time
+    #last_message_number=$(ls -t ${RPIGO_QUEUE}/${to_daemon}.[0-9]* 2>/dev/null | sort -V | tail -n 1 | xargs basename 2>/dev/null | cut -d. -f 2)
+    # by name
+    last_message_number=$(ls ${RPIGO_QUEUE}/${to_daemon}.[0-9]* 2> /dev/null | sort -V | tail -n 1 | xargs basename 2>/dev/null | cut -d. -f 2)
+
+    [ -z $last_message_number ] && last_message_number=-1
+
+    message_file="${RPIGO_QUEUE}/${to_daemon}.$(expr $last_message_number + 1)"
+    
+    rpigo_debug "message_file will be: $message_file"
+    rpigo_debug "COMMAND will be: $command"
+
+    echo "$command" > $message_file
+    #rpigo_debug "rm -f => $message_file"
+}
+
+
