@@ -142,22 +142,17 @@ daemonize() {
 }
 
 startall() {
+    local daemon
     rpigo_debug "startall()"
 
     daemonize "${RPIGO_BINDIR}/rpigo-authd${SCRIPT_EXT}" -o fifo
+    for daemon in $daemons_list_in_start_order
+    do
+        daemonize "${RPIGO_BINDIR}/${daemon}${SCRIPT_EXT}"
+    done
 
     # WIP
     #daemonize "${RPIGO_BINDIR}/rpigo-networkd${SCRIPT_EXT}"
-
-    daemonize "${RPIGO_BINDIR}/rpigo-packaged${SCRIPT_EXT}"
-    daemonize "${RPIGO_BINDIR}/rpigo-powerd${SCRIPT_EXT}"
-    daemonize "${RPIGO_BINDIR}/rpigo-storaged${SCRIPT_EXT}"
-
-    daemonize "${RPIGO_BINDIR}/rpigo-serviced${SCRIPT_EXT}"
-    daemonize "${RPIGO_BINDIR}/rpigo-dlnad${SCRIPT_EXT}"
-    daemonize "${RPIGO_BINDIR}/rpigo-ftpd${SCRIPT_EXT}"
-    daemonize "${RPIGO_BINDIR}/rpigo-smbd${SCRIPT_EXT}"
-    # WIP
     #daemonize "${RPIGO_BINDIR}/rpigo-printerd${SCRIPT_EXT}"
 }
 
@@ -166,15 +161,7 @@ stopall() {
 
     rpigo_debug "stopall()"
 
-    for daemon in \
-        rpigo-packaged \
-        rpigo-powerd \
-        rpigo-storaged \
-        rpigo-serviced \
-        rpigo-dlnad \
-        rpigo-ftpd \
-        rpigo-smbd \
-        rpigo-authd
+    for daemon in $daemons_list_in_stop_order rpigo-authd
     do
         #
         # Inject STOP command
@@ -190,6 +177,21 @@ stopall() {
     wait
     rpigo_debug "SIGTERM handler: DONE."
 }
+
+#
+# Ordered lists of daemons to start or stop.
+# Sans authd!
+#
+daemons_list_in_start_order="\
+    rpigo-powerd \
+    rpigo-storaged \
+    rpigo-ftpd \
+    rpigo-smbd \
+    rpigo-dlnad \
+    rpigo-serviced \
+    rpigo-packaged \
+"
+daemons_list_in_stop_order="$(echo $daemons_list_in_start_order | sed -e 's/\s/\n/g' | tac)"
 
 #
 # Setup a trap to stop childrens on SIGTERM.
