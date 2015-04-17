@@ -204,7 +204,7 @@ daemons_list_in_start_order="\
     rpigo-serviced \
     rpigo-packaged \
 "
-daemons_list_in_stop_order="$(echo $daemons_list_in_start_order | sed -e 's/\s/\n/g' | tac)"
+daemons_list_in_stop_order="$(echo $daemons_list_in_start_order | sed -e 's/\s/\n/g' | tac | cut -d'-' -f 2-)"
 
 #
 # Setup a trap to stop childrens on SIGTERM.
