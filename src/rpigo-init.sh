@@ -158,6 +158,8 @@ startall() {
 
     startup_script="${RPIGO_CONFIGDIR}/commands.startup"
     if [ -f "$startup_script" ]; then
+        rpigo_debug "sleeping before startup script runs"
+        sleep 5
         rpigo_info "Running startup commands from ${startup_script}."
         rpigo_queue_script "$startup_script"
     fi
