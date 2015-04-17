@@ -164,7 +164,7 @@ startall() {
 }
 
 stopall() {
-    local daemon shutdown_script
+    local daemon shutdown_script stop_command
 
     rpigo_debug "stopall()"
 
@@ -174,13 +174,14 @@ stopall() {
         rpigo_queue_script "$shutdown_script"
     fi
 
-    for daemon in $daemons_list_in_stop_order rpigo-authd
+    for daemon in $daemons_list_in_stop_order authd
     do
         #
         # Inject STOP command.
         #
-        rpigo_info "Sending '$daemon STOP' to daemon '$daemon'."
-        rpigo_queue_send "$daemon" "$daemon STOP"
+        stop_command="rpigo-${daemon} STOP"
+        rpigo_info "Sending '$stop_command' to daemon '$daemon'."
+        rpigo_queue_send "$daemon" "$stop_command"
     done
 
     #
