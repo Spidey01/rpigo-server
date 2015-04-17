@@ -92,3 +92,39 @@ rpigo_unitname() {
     fi
 }
 
+
+# Figure out which daemon will respond to a command.
+#
+rpigo_which_daemon() {
+    local command basic_pattern daemon fn list
+
+    command="$*"
+    fn="${FUNCNAME[0]}()"
+
+    rpigo_debug "$fn: command=\"$command\""
+
+    if [ -z "$RPIGO_SHAREDIR" ]; then
+        rpigo_error "$fn: RPIGO_SHAREDIR not set."
+        return 70 # EX_SOFTWARE.
+    fi
+
+    for list in ${RPIGO_SHAREDIR}/*.cmds
+    do
+        rpigo_debug "$fn: command pattern list=$list"
+
+        while read basic_pattern
+        do
+            # skip comments ^_^.
+            echo "$basic_pattern" | grep -qE '^#' && continue
+
+            if echo "$command" | grep -q "$basic_pattern"; then
+                daemon="$(basename $list | cut -d. -f 1)"
+                rpigo_debug "$fn: matched $list / $daemon"
+                echo "$daemon"
+                break
+            fi
+        done < "$list"
+    done
+}
+
+

@@ -27,6 +27,7 @@ fi
 
 . "${RPIGO_LIBDIR}/sudo.lib"
 . "${RPIGO_LIBDIR}/log.lib"
+. "${RPIGO_LIBDIR}/util.lib"
 . "${RPIGO_LIBDIR}/queue.lib"
 
 rpigo_sudo_setup
@@ -98,27 +99,7 @@ while $command_parser COMMAND
 do
     rpigo_debug "COMMAND='$COMMAND'"
 
-    to_daemon=""
-
-    #
-    # Figure out which daemon to dispatch command to.
-    #
-    for list in ${RPIGO_SHAREDIR}/*.cmds
-    do
-        rpigo_debug "command pattern list=$list"
-
-        while read basic_pattern
-        do
-            # skip comments ^_^.
-            echo "$basic_pattern" | grep -qE '^#' && continue
-
-            if echo "$COMMAND" | grep -q "$basic_pattern"; then
-                to_daemon="$(basename $list | cut -d. -f 1)"
-                rpigo_debug "matched $list / $to_daemon"
-                break
-            fi
-        done < "$list"
-    done
+    to_daemon="$(rpigo_which_daemon "$COMMAND")"
 
     if [ -z "$to_daemon" ]; then
         rpigo_warn "unknown command: '$COMMAND'"
