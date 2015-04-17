@@ -164,10 +164,10 @@ stopall() {
     for daemon in $daemons_list_in_stop_order rpigo-authd
     do
         #
-        # Inject STOP command
+        # Inject STOP command.
         #
-        rpigo_info "Sending '$daemon STOP' to authd."
-        echo $daemon STOP > "${RPIGO_QUEUE}/$(ls "$RPIGO_QUEUE" | grep fifo | tail -n 1)"
+        rpigo_info "Sending '$daemon STOP' to daemon '$daemon'."
+        rpigo_queue_send "$daemon" "$daemon STOP"
     done
 
     #
