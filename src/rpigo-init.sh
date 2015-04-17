@@ -106,6 +106,7 @@ do
 done
 
 .  "${RPIGO_LIBDIR}/log.lib"
+.  "${RPIGO_LIBDIR}/util.lib"
 .  "${RPIGO_LIBDIR}/sudo.lib"
 .  "${RPIGO_LIBDIR}/queue.lib"
 
@@ -142,7 +143,7 @@ daemonize() {
 }
 
 startall() {
-    local daemon
+    local daemon startup_script
     rpigo_debug "startall()"
 
     daemonize "${RPIGO_BINDIR}/rpigo-authd${SCRIPT_EXT}" -o fifo
@@ -154,12 +155,24 @@ startall() {
     # WIP
     #daemonize "${RPIGO_BINDIR}/rpigo-networkd${SCRIPT_EXT}"
     #daemonize "${RPIGO_BINDIR}/rpigo-printerd${SCRIPT_EXT}"
+
+    startup_script="${RPIGO_CONFIGDIR}/commands.startup"
+    if [ -f "$startup_script" ]; then
+        rpigo_info "Running startup commands from ${startup_script}."
+        rpigo_queue_script "$startup_script"
+    fi
 }
 
 stopall() {
-    local daemon
+    local daemon shutdown_script
 
     rpigo_debug "stopall()"
+
+    shutdown_script="${RPIGO_CONFIGDIR}/commands.shutdown"
+    if [ -f "$shutdown_script" ]; then
+        rpigo_info "Running shutdown commands from ${shutdown_script}."
+        rpigo_queue_script "$shutdown_script"
+    fi
 
     for daemon in $daemons_list_in_stop_order rpigo-authd
     do

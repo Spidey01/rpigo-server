@@ -102,3 +102,33 @@ rpigo_queue_send() {
 }
 
 
+# Add commands in script to the queue.
+#
+rpigo_queue_script() {
+    local command fn script to_daemon 
+
+    fn="${FUNCNAME[0]}()"
+    script="$1"
+
+
+
+    rpigo_info "$fn: Executing script $script"
+
+    while read command
+    do
+        # skip comments ^_^.
+        echo "$command" | grep -qE '^#' && continue
+
+        rpigo_trace "$fn: command '$command' in script '$command'"
+
+        to_daemon="$(rpigo_which_daemon "$command")"
+
+        if [ -z "$to_daemon" ]; then
+            rpigo_warn "unknown command: '$command'"
+            return 76 # EX_PROTOCOL
+        fi
+        rpigo_queue_send "$to_daemon" $command
+    done < "$script"
+}
+
+
