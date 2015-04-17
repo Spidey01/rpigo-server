@@ -97,9 +97,10 @@ $command_setup || {
 
 while $command_parser COMMAND
 do
-    rpigo_debug "COMMAND='$COMMAND'"
+    rpigo_trace "COMMAND='$COMMAND'"
 
     to_daemon="$(rpigo_which_daemon "$COMMAND")"
+    rpigo_trace "to_daemon='$to_daemon'
 
     if [ -z "$to_daemon" ]; then
         rpigo_warn "unknown command: '$COMMAND'"

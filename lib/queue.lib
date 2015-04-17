@@ -83,6 +83,8 @@ rpigo_queue_send() {
     shift
     command="$*"
 
+    rpigo_trace "rpigo_queue_send(): to_daemon='$to_daemon' command='$command'"
+
     #
     # Calculate some valid name for message_file.
     # We are the ONLY function who creates these.
