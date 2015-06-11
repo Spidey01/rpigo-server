@@ -52,8 +52,8 @@ ftpd_start() {
     # This is set because Debian's init script for vsftp makes it before launch
     # and the default is under the /run tmpfs.
     #
-    if config_grep -q "secure_chroot_dir" "$MY_CONFIG"; then
-        mkdir -p $(config_grep "secure_chroot_dir" "$MY_CONFIG")
+    if config_grep "secure_chroot_dir" "$MY_CONFIG"; then
+        sudo mkdir -p $(config_grep "secure_chroot_dir" "$MY_CONFIG" | cut -d'=' -f 2)
     fi
 
     rpigo_info "Starting vsftpd."
