@@ -46,9 +46,6 @@ storage_config="${RPIGO_CONFIGDIR}/storage.conf"
 #
 storage_root="/media"
 
-
-clean_up_needed=
-
 minidlna_pidfile="${RPIGO_RUNDIR}/minidlna.pid"
 
 
@@ -101,7 +98,7 @@ do
         */dlnad.*)
             case "$command" in
                 ${NAME}\ STOP)
-                    [ -n $clean_up_needed ] && dlna_disable
+                    dlna_disable
                     rpigo_info "stopping process."
                     exit 0
                     ;;

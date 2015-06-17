@@ -32,19 +32,14 @@ rpigo_sudo_setup
 rpigo_log_setup smbd
 
 #
-# Floating defaults like this make me think all defaults should be put in
-# /etc/default/rpigo and that we add a /etc/default/rpigo: default rule to
-# the Makefile accordingly.
-#
-# Or make it possible for something like config_eval() to be told it should
-# abort if [list of variables] is not found.
+# Floating defaults like this make me think config_eval() should have an
+# option to report error if [list of variables] is not found.
 #
 storage_root="/media"
 smb_share_name="storage"
 smb_share_acl="Everyone:R"
 smb_share_guest="n"
 
-clean_up_needed=
 
 ensure_samba_running() {
     rpigo_debug 'Are samba services running?'
@@ -53,6 +48,7 @@ ensure_samba_running() {
         sudo -n service samba start
     fi
 }
+
 
 smb_enable() {
     ensure_samba_running
@@ -65,6 +61,7 @@ smb_enable() {
 
     [ $? -eq 0 ] && clean_up_needed=true
 }
+
 
 smb_disable() {
     rpigo_info "Unexporting usershare $storage_sharename via SMB."
@@ -101,7 +98,7 @@ do
         */smbd.*)
             case "$command" in
                 ${NAME}\ STOP)
-                    [ -n $clean_up_needed ] && smb_disable
+                    smb_disable
                     rpigo_info "stopping process."
                     exit 0
                     ;;

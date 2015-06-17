@@ -116,15 +116,11 @@ do
                     rpigo_info "stopping process."
                     exit 0
                     ;;
-                FTPD\ START)
+                FTP\ ENABLE)
                     ftpd_start
                     ;;
-                FTPD\ STOP)
+                FTP\ DISABLE)
                     ftpd_stop
-                    ;;
-                FTPD\ RESTART)
-                    ftpd_stop
-                    ftpd_start
                     ;;
                 *)
                     echo "handle command: $command ..."
