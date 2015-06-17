@@ -1,6 +1,6 @@
 #!/bin/sh
 
-while getopts "dro:kq:" opt; do
+while getopts "dro:kq:f:" opt; do
     case $opt in
         d)
             developer=true
@@ -17,6 +17,9 @@ while getopts "dro:kq:" opt; do
         q)
             queue_here="$OPTARG"
             ;;
+        f)
+            fifo_here="$OPTARG"
+            ;;
         \?)
             echo "Invalid option: _$OPTARG" >&2
             echo
@@ -27,6 +30,7 @@ while getopts "dro:kq:" opt; do
             printf "\t-o HOW => see rpigo-authd -o.\n" 
             printf "\t-k     => kill after sending.\n" 
             printf "\t-q     => override RPIGO_QUEUE.\n" 
+            printf "\t-f     => force this fifo file.\n" 
             echo
             exit $OPTERR
             ;;
@@ -35,22 +39,31 @@ done
 shift `expr $OPTIND - 1`
 
 fifo_send() {
-    local queue fifo
+    local queue fifo pid
+
+    pid="$(ps xa | grep rpigo-authd | grep -v grep | awk '{print $1}')"
 
     if [ "$developer" = "true" ]; then
         queue="${queue_here:-/tmp/rpigo.queue}"
+        fifo="${fifo_here:-/tmp/rpigo.spool/${pid}.fifo}"
     else
         queue="${queue_here:-/var/spool/rpigo/queue}"
+        fifo="${fifo_here:-/var/spool/rpigo/authd/${pid}.fifo}"
     fi
 
-    fifo="${queue}/$(ls "$queue" | grep fifo | tail -n 1)"
+    if [ ! -e "$fifo" ]; then
+        echo "Can't find the FIFO file."
+        echo "Try again with -f FIFO."
+        exit 127
+    fi
 
-    echo $* > $fifo
+    echo $* > "$fifo"
 }
 
 echo "Sending '$*' to authd."
 ${how:-fifo}_send $*
 
+# FIXME: handle -r and -d
 if [ -n "$want_kill" ]; then
     echo hit enter to kill system
     read IDONTCARE
