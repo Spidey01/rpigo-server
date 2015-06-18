@@ -63,8 +63,6 @@ smb_enable() {
         "$smb_share_name" "$storage_root" \
         "$smb_share_comment" \
         "$smb_share_acl" guest_ok="$smb_share_guest_ok"
-
-    [ $? -eq 0 ] && clean_up_needed=true
 }
 
 
@@ -94,8 +92,6 @@ done
 [ -n "$storage_root" ] \
     || rpigo_warn "storage_root may not have been set in storage.conf?"
 
-
-[ "$enable_smb" = true ] && smb_enable
 
 rpigo_queue_setup
 
