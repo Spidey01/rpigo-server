@@ -11,6 +11,7 @@ RPIGO_USERNAME ALL=(root) NOPASSWD: \
 	/sbin/shutdown, \
 	/sbin/start-stop-daemon, \
 	/usr/bin/avahi-publish-service, \
+	/usr/bin/net usershare *, \
 	/usr/sbin/service, \
 	/usr/sbin/update-rc.d, \
 	/usr/sbin/vsftpd, \

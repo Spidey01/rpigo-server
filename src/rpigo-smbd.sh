@@ -59,7 +59,7 @@ smb_enable() {
     [ -z "$smb_share_guest" ]   && smb_share_guest="n"
 
     rpigo_info "Exporting usershare $storage_sharename via SMB."
-    net usershare add \
+    sudo net usershare add \
         "$smb_share_name" "$storage_root" \
         "$smb_share_comment" \
         "$smb_share_acl" guest_ok="$smb_share_guest_ok"
@@ -73,7 +73,7 @@ smb_disable() {
     }
 
     rpigo_info "Unexporting usershare $storage_sharename via SMB."
-    net usershare delete "$storage_sharename"
+    sudo net usershare delete "$storage_sharename"
 }
 
 
