@@ -176,7 +176,7 @@ stopall() {
         rpigo_queue_script "$shutdown_script"
     fi
 
-    for daemon in $daemons_list_in_stop_order authd
+    for daemon in $daemons_list_in_stop_order
     do
         #
         # Inject STOP command.
@@ -185,6 +185,13 @@ stopall() {
         rpigo_info "Sending '$stop_command' to daemon '$daemon'."
         rpigo_queue_send "$daemon" "$stop_command"
     done
+
+    # authd does not watch the message queue. So we have to provide its stop
+    # message via the authentication backend. This is kind of a bad coupling
+    # but it is sufficent for now.
+    #
+    echo rpigo-authd STOP > "${RPIGO_SPOOLDIR}/authd/$(ps xa | grep rpigo-authd | grep -v grep | awk '{print $1}').fifo"
+
 
     #
     # Is it safe to do this in a SIGTERM handler?
