@@ -31,15 +31,6 @@ fi
 rpigo_sudo_setup
 rpigo_log_setup smbd
 
-#
-# Floating defaults like this make me think config_eval() should have an
-# option to report error if [list of variables] is not found.
-#
-storage_root="/media"
-smb_share_name="storage"
-smb_share_acl="Everyone:R"
-smb_share_guest="n"
-
 
 ensure_samba_running() {
     rpigo_debug 'Are samba services running?'
@@ -53,17 +44,36 @@ ensure_samba_running() {
 smb_enable() {
     ensure_samba_running
 
+    [ -n "$storage_root" ] || {
+        rpigo_error "Can't enable SMB because storage_root is not set."
+        return 78 # EX_CONFIG
+    }
+
+    #
+    # Floating defaults like this make me think config_eval() should have an
+    # option to report error if [list of variables] is not found.
+    #
+    [ -z "$smb_share_name" ]    && smb_share_name="storage"
+    [ -z "$smb_share_comment" ] && smb_share_comment="$(rpigo_unitname) SMB File Sharing}"
+    [ -z "$smb_share_acl" ]     && smb_share_acl="Everyone:R"
+    [ -z "$smb_share_guest" ]   && smb_share_guest="n"
+
     rpigo_info "Exporting usershare $storage_sharename via SMB."
-    net usershare add $options \
-        "${smb_share_name:-storage}" "${storage_root:-media}" \
-        "${smb_share_comment:-$(rpigo_unitname) SMB File Sharing}" \
-        "${smb_share_acl:-Everyone:R}" guest_ok="${smb_share_guest_ok:-}"
+    net usershare add \
+        "$smb_share_name" "$storage_root" \
+        "$smb_share_comment" \
+        "$smb_share_acl" guest_ok="$smb_share_guest_ok"
 
     [ $? -eq 0 ] && clean_up_needed=true
 }
 
 
 smb_disable() {
+    [ -n "$storage_root" ] || {
+        rpigo_error "Can't disable SMB because storage_root is not set."
+        return 78 # EX_CONFIG
+    }
+
     rpigo_info "Unexporting usershare $storage_sharename via SMB."
     net usershare delete "$storage_sharename"
 }
@@ -81,6 +91,8 @@ do
         rpigo_error "error parsing configuration file '${config_to_load}'."
     fi
 done
+[ -n "$storage_root" ] \
+    || rpigo_warn "storage_root may not have been set in storage.conf?"
 
 
 [ "$enable_smb" = true ] && smb_enable
