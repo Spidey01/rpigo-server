@@ -81,6 +81,7 @@ help:
 	@echo ""
 	@printf "\t* help: You're reading it.\n"
 	@printf "\t* install: Install to $(DESTDIR)$(PREFIX)\n"
+	@printf "\t* update: Like install but ignore $(CONFIGDIR)\n"
 	@printf "\t* uninstall: uninstall files but leave $(CONFIGDIR)\n"
 	@printf "\t* purge: uninstall + purge $(CONFIGDIR)\n"
 	@printf "\t* useradd: do a useradd for $(RPIGO_USERNAME).\n"
@@ -96,7 +97,9 @@ help:
 	@echo "will respect this variable."
 	@echo ""
 
-install: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(CONFIGDIR) $(CONFIG_FILES) $(DOCDIR) $(DOC_FILES) $(OS_FILES) $(VERSION_FILES)
+update: $(SHAREDIR) $(CMDS_FILES) $(LIBDIR) $(LIB_FILES) $(SRC_FILES) $(DOCDIR) $(DOC_FILES) $(OS_FILES) $(VERSION_FILES)
+
+install: update $(CONFIGDIR) $(CONFIG_FILES)
 	@echo "$(NAME) was installed to $(DESTDIR)$(PREFIX)"
 
 # TODO: this should stop the daemon horde before hosing init scripts.
