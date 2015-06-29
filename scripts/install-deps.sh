@@ -8,6 +8,6 @@ if [ "$(id -u)" -ne 0 ]; then
     read OK
 fi
 
-apt-get install bash sudo util-linux samba samba-common-bin vsftpd minidlna inotify-tools avahi-utils
+apt-get install bash sudo util-linux samba samba-common-bin vsftpd minidlna inotify-tools avahi-utils eject
 update-rc.d vsftpd remove
 update-rc.d minidlna remove
