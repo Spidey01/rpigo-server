@@ -155,13 +155,13 @@ $(SUDOERS_FILE): $(SUDOERS_TEMPLATE)
 #
 
 # could probably pull this from tracing .git/HEAD but meh
-$(CONFIGDIR)/commit:
+$(CONFIGDIR)/commit: $(CONFIGDIR)
 	if git status | grep -q modified: ; \
 		then echo "$$(git log --oneline | head -n 1 | cut -d' ' -f 1)_modified" > "$@" ; \
 		else git log --oneline | head -n 1 | cut -d' ' -f 1 > "$@" ; \
 		fi
 
-$(CONFIGDIR)/version:
+$(CONFIGDIR)/version: $(CONFIGDIR)
 	if [ "$$(git tag | wc -l)" -gt 0 ]; then git describe --tags HEAD > "$@"; fi
 
 #
