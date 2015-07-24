@@ -54,11 +54,11 @@ smb_enable() {
     # option to report error if [list of variables] is not found.
     #
     [ -z "$smb_share_name" ]    && smb_share_name="storage"
-    [ -z "$smb_share_comment" ] && smb_share_comment="$(rpigo_unitname) SMB File Sharing}"
+    [ -z "$smb_share_comment" ] && smb_share_comment="$(rpigo_unitname) SMB File Sharing"
     [ -z "$smb_share_acl" ]     && smb_share_acl="Everyone:R"
     [ -z "$smb_share_guest" ]   && smb_share_guest="n"
 
-    rpigo_info "Exporting usershare $storage_sharename via SMB."
+    rpigo_info "Exporting usershare $storage_share_name via SMB."
     rpigo_sudo net usershare add \
         "$smb_share_name" "$storage_root" \
         "$smb_share_comment" \
