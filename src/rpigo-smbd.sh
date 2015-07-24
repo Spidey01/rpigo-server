@@ -34,9 +34,9 @@ rpigo_log_setup smbd
 
 ensure_samba_running() {
     rpigo_debug 'Are samba services running?'
-    if ! sudo -n service samba status; then
+    if ! rpigo_sudo -n service samba status; then
         rpigo_debug 'Starting samba service.'
-        sudo -n service samba start
+        rpigo_sudo -n service samba start
     fi
 }
 
@@ -59,7 +59,7 @@ smb_enable() {
     [ -z "$smb_share_guest" ]   && smb_share_guest="n"
 
     rpigo_info "Exporting usershare $storage_sharename via SMB."
-    sudo net usershare add \
+    rpigo_sudo net usershare add \
         "$smb_share_name" "$storage_root" \
         "$smb_share_comment" \
         "$smb_share_acl" guest_ok="$smb_share_guest_ok"
@@ -73,7 +73,7 @@ smb_disable() {
     }
 
     rpigo_info "Unexporting usershare $storage_sharename via SMB."
-    sudo net usershare delete "$storage_sharename"
+    rpigo_sudo net usershare delete "$storage_sharename"
 }
 
 
