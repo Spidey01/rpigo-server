@@ -94,7 +94,15 @@ mount_device() {
         #
         # I'm just going to trust blkid to tell us the format. And warn if mkfs.that doesn't exist.
         #
-        volume_format="$(rpigo_sudo blkid -o export -s TYPE "$new_device" | cut -d '=' -f 2)"
+        # XXX:
+        #       On util-linux 2.25.2-4ubuntu2 on my ODroid-XU4's Ubuntu 15.04
+        #       image, DEVNAME is output along with TYPE when doing:
+        #
+        #               blkid -o export -s TYPE. So just do a greppy here.
+        #
+        #       So let's work around it here \o/
+        #
+        volume_format="$(rpigo_sudo blkid -o export -s TYPE "$new_device" | grep TYPE | cut -d '=' -f 2)"
         type mkfs."${volume_format}" >/dev/null 2>/dev/null || rpigo_warn "$fn: mkfs.$volume_format doesn't exist."
 
         #
