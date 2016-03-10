@@ -86,7 +86,7 @@ mount_device() {
             rpigo_error "$fn: unsupported storage_name_format=${storage_name_format}."
             continue
         fi
-        volume_name="$(rpigo_sudo blkid -o export "$new_device" | grep "$storage_name_format" | cut -d '=' -f 2)"
+        volume_name="$(rpigo_sudo blkid -o export "$new_device" | grep "^${storage_name_format}=" | cut -d '=' -f 2)"
 
         # fail safe in case storage_name_format=LABEL and there is no label.
         [ -z "$volume_name" ] && volume_name="$(basename "$new_device")"
@@ -102,7 +102,7 @@ mount_device() {
         #
         #       So let's work around it here \o/
         #
-        volume_format="$(rpigo_sudo blkid -o export -s TYPE "$new_device" | grep TYPE | cut -d '=' -f 2)"
+        volume_format="$(rpigo_sudo blkid -o export -s TYPE "$new_device" | grep "^TYPE=" | cut -d '=' -f 2)"
         type mkfs."${volume_format}" >/dev/null 2>/dev/null || rpigo_warn "$fn: mkfs.$volume_format doesn't exist."
 
         #
